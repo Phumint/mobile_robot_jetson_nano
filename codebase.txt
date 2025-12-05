@@ -1,0 +1,707 @@
+
+==========================================
+
+--- File: ./src/car_bringup/launch/sensors.launch.py ---
+#!/usr/bin/env python3
+
+from launch import LaunchDescription
+from launch_ros.actions import Node
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
+
+def generate_launch_description():
+    
+    serial_port_arg = DeclareLaunchArgument(
+        'serial_port',
+        default_value='/dev/ttyTHS1',
+        description='Serial port for STM32'
+    )
+    
+    # STM32 Driver Node (sensors only mode)
+    stm32_driver = Node(
+        package='car_hardware',
+        executable='stm32_driver',
+        name='stm32_driver_node',
+        output='screen',
+        parameters=[{
+            'serial_port': LaunchConfiguration('serial_port'),
+            'baud_rate': 115200
+        }]
+    )
+    
+    return LaunchDescription([
+        serial_port_arg,
+        stm32_driver,
+    ])
+
+--- File: ./src/car_bringup/launch/teleop.launch.py ---
+#!/usr/bin/env python3
+
+from launch import LaunchDescription
+from launch_ros.actions import Node
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
+
+def generate_launch_description():
+    
+    # Declare arguments
+    serial_port_arg = DeclareLaunchArgument(
+        'serial_port',
+        default_value='/dev/ttyTHS1',
+        description='Serial port for STM32'
+    )
+    
+    # STM32 Driver Node
+    stm32_driver = Node(
+        package='car_hardware',
+        executable='stm32_driver',
+        name='stm32_driver_node',
+        output='screen',
+        parameters=[{
+            'serial_port': LaunchConfiguration('serial_port'),
+            'baud_rate': 115200,
+            'wheel_base': 0.25,
+            'max_speed': 1.0,
+            'max_steering_angle': 40.0
+        }]
+    )
+    
+    # Teleop Keyboard Node
+    teleop_keyboard = Node(
+        package='car_hardware',
+        executable='teleop_keyboard',
+        name='teleop_keyboard_node',
+        output='screen',
+        parameters=[{
+            'speed_step': 0.1,
+            'turn_step': 0.3,
+            'max_speed': 1.0,
+            'max_turn': 1.0
+        }],
+        prefix='xterm -e'  # Run in separate terminal
+    )
+    
+    return LaunchDescription([
+        serial_port_arg,
+        stm32_driver,
+        # teleop_keyboard,  # Uncomment to auto-launch teleop
+    ])
+
+--- File: ./src/car_bringup/package.xml ---
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>car_bringup</name>
+  <version>0.0.0</version>
+  <description>TODO: Package description</description>
+  <maintainer email="root@todo.todo">root</maintainer>
+  <license>TODO: License declaration</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
+
+--- File: ./src/car_bringup/CMakeLists.txt ---
+cmake_minimum_required(VERSION 3.8)
+project(car_bringup)
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+# find dependencies
+find_package(ament_cmake REQUIRED)
+
+# Install launch files
+install(DIRECTORY
+  launch
+  config
+  DESTINATION share/${PROJECT_NAME}/
+)
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
+ament_package()
+
+--- File: ./src/car_hardware/resource/car_hardware ---
+
+--- File: ./src/car_hardware/package.xml ---
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>car_hardware</name>
+  <version>0.0.0</version>
+  <description>TODO: Package description</description>
+  <maintainer email="root@todo.todo">root</maintainer>
+  <license>TODO: License declaration</license>
+
+  <depend>rclpy</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>nav_msgs</depend>
+
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
+
+--- File: ./src/car_hardware/setup.py ---
+from setuptools import setup
+import os
+from glob import glob
+
+package_name = 'car_hardware'
+
+setup(
+    name=package_name,
+    version='0.0.1',
+    packages=[package_name],
+    data_files=[
+        ('share/ament_index/resource_index/packages',
+            ['resource/' + package_name]),
+        ('share/' + package_name, ['package.xml']),
+    ],
+    install_requires=['setuptools'],
+    zip_safe=True,
+    maintainer='your_name',
+    maintainer_email='your_email@example.com',
+    description='Hardware interface for RC car',
+    license='MIT',
+    tests_require=['pytest'],
+    entry_points={
+        'console_scripts': [
+            'stm32_driver = car_hardware.stm32_driver_node:main',
+            'teleop_keyboard = car_hardware.teleop_keyboard_node:main',
+        ],
+    },
+)
+
+--- File: ./src/car_hardware/setup.cfg ---
+[develop]
+script_dir=$base/lib/car_hardware
+[install]
+install_scripts=$base/lib/car_hardware
+
+--- File: ./src/car_hardware/car_hardware/stm32_driver_node.py ---
+#!/usr/bin/env python3
+"""
+STM32 Driver Node (stable version)
+Reads STM32 packets:
+  $ENC,<count>;IMU,ax,ay,az,gx,gy,gz,roll,pitch*
+Controls motor & steering.
+"""
+
+import rclpy
+from rclpy.node import Node
+from geometry_msgs.msg import Twist
+from sensor_msgs.msg import Imu
+from std_msgs.msg import Int32
+import serial
+import threading
+import math
+import time
+
+class STM32DriverNode(Node):
+    def __init__(self):
+        super().__init__('stm32_driver_node')
+
+        # Parameters
+        self.declare_parameter('serial_port', '/dev/ttyTHS1')
+        self.declare_parameter('baud_rate', 115200)
+        self.declare_parameter('wheel_base', 0.25)
+        self.declare_parameter('max_speed', 1.0)
+        self.declare_parameter('max_steering_angle', 40.0)
+
+        self.port = self.get_parameter('serial_port').value
+        self.baud = self.get_parameter('baud_rate').value
+        self.wheel_base = self.get_parameter('wheel_base').value
+        self.max_speed = self.get_parameter('max_speed').value
+        self.max_steering_angle = self.get_parameter('max_steering_angle').value
+
+        # Try to open serial port
+        self.serial = None
+        self._open_serial()
+
+        # Publishers
+        self.encoder_pub = self.create_publisher(Int32, 'encoder_count', 10)
+        self.imu_pub = self.create_publisher(Imu, 'imu/data_raw', 10)
+
+        # Subscriber
+        self.cmd_vel_sub = self.create_subscription(
+            Twist, 'cmd_vel', self.cmd_vel_callback, 10
+        )
+
+        # Thread control
+        self.running = True
+        self.thread = threading.Thread(target=self.serial_thread, daemon=True)
+        self.thread.start()
+
+        self.integrated_yaw = 0.0
+
+        self.get_logger().info("STM32 Driver Node initialized")
+
+    def _open_serial(self):
+        try:
+            self.serial = serial.Serial(self.port, self.baud, timeout=0.1)
+            self.get_logger().info(f"Connected to STM32 on {self.port}")
+        except Exception as e:
+            self.get_logger().error(f"Failed to open serial port {self.port}: {e}")
+            self.serial = None
+
+    # ---------------------------
+    # SEND MOTOR & STEERING CMD
+    # ---------------------------
+    def cmd_vel_callback(self, msg):
+        linear = msg.linear.x
+        angular = msg.angular.z
+
+        # Motor speed (-100 to 100)
+        speed = int((linear / self.max_speed) * 100)
+        speed = max(-100, min(100, speed))
+
+        # Ackermann steering
+        if abs(linear) > 0.01:
+            steering_rad = math.atan(angular * self.wheel_base / linear)
+            steering_deg = math.degrees(steering_rad)
+        else:
+            steering_deg = 0
+
+        steering_deg = max(-self.max_steering_angle, min(self.max_steering_angle, steering_deg))
+
+        # Servo mapping
+        servo = 90 - int(steering_deg)
+        servo = max(50, min(130, servo))
+
+        self.send_cmd(speed, servo)
+
+    def send_cmd(self, speed, servo):
+        if not self.serial:
+            return
+        try:
+            packet = f"#CMD,{speed},{servo}*"
+            self.serial.write(packet.encode())
+        except Exception as e:
+            self.get_logger().warn(f"Failed to send command: {e}")
+
+    # ---------------------------
+    # SERIAL READING THREAD
+    # ---------------------------
+    def serial_thread(self):
+        while self.running:
+            if not self.serial:
+                time.sleep(0.5)
+                self._open_serial()
+                continue
+
+            try:
+                line = self.serial.readline().decode(errors='ignore').strip()
+
+                if not line:
+                    continue
+
+                if not (line.startswith('$') and line.endswith('*')):
+                    continue
+
+                self.parse_packet(line)
+
+            except Exception as e:
+                self.get_logger().warn(f"Serial read warning: {e}")
+                time.sleep(0.1)
+
+    # ---------------------------
+    # PACKET PARSER
+    # ---------------------------
+    def parse_packet(self, line):
+        # Remove $ and *
+        core = line[1:-1]
+        parts = core.split(';')
+
+        enc_part = parts[0]
+        imu_part = parts[1]
+
+        # ----- Encoder -----
+        if enc_part.startswith("ENC,"):
+            try:
+                count = int(enc_part.split(',')[1])
+                msg = Int32()
+                msg.data = count
+                self.encoder_pub.publish(msg)
+            except:
+                pass
+
+        # ----- IMU -----
+        if imu_part.startswith("IMU,"):
+            vals = imu_part.split(',')[1:]
+            if len(vals) >= 8:
+                try:
+                    ax = int(vals[0]) / 1000.0
+                    ay = int(vals[1]) / 1000.0
+                    az = int(vals[2]) / 1000.0
+                    gx = int(vals[3]) / 100.0
+                    gy = int(vals[4]) / 100.0
+                    gz = int(vals[5]) / 100.0
+                    roll = int(vals[6]) / 100.0
+                    pitch = int(vals[7]) / 100.0
+
+                    self.publish_imu(ax, ay, az, gx, gy, gz, roll, pitch)
+                except:
+                    pass
+
+    # ---------------------------
+    # IMU MESSAGE PUBLISHER
+    # ---------------------------
+    def publish_imu(self, ax, ay, az, gx, gy, gz, roll, pitch):
+        msg = Imu()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.frame_id = "imu_link"
+
+        msg.linear_acceleration.x = ax * 9.81
+        msg.linear_acceleration.y = ay * 9.81
+        msg.linear_acceleration.z = az * 9.81
+
+        msg.angular_velocity.x = math.radians(gx)
+        msg.angular_velocity.y = math.radians(gy)
+        msg.angular_velocity.z = math.radians(gz)
+
+        dt = 0.1
+        self.integrated_yaw += math.radians(gz) * dt
+
+        cy = math.cos(self.integrated_yaw * 0.5)
+        sy = math.sin(self.integrated_yaw * 0.5)
+        cp = math.cos(math.radians(pitch) * 0.5)
+        sp = math.sin(math.radians(pitch) * 0.5)
+        cr = math.cos(math.radians(roll) * 0.5)
+        sr = math.sin(math.radians(roll) * 0.5)
+
+        msg.orientation.w = cr * cp * cy + sr * sp * sy
+        msg.orientation.x = sr * cp * cy - cr * sp * sy
+        msg.orientation.y = cr * sp * cy + sr * cp * sy
+        msg.orientation.z = cr * cp * sy - sr * sp * cy
+
+        msg.orientation_covariance = [0.01,0,0, 0,0.01,0, 0,0,0.1]
+        msg.angular_velocity_covariance = [0.01,0,0, 0,0.01,0, 0,0,0.01]
+        msg.linear_acceleration_covariance = [0.01,0,0, 0,0.01,0, 0,0,0.01]
+
+        self.imu_pub.publish(msg)
+
+    # ---------------------------
+    # CLEANUP
+    # ---------------------------
+    def destroy_node(self):
+        self.running = False
+        time.sleep(0.1)
+        if self.serial:
+            try:
+                self.serial.close()
+            except:
+                pass
+        super().destroy_node()
+
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = STM32DriverNode()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    node.destroy_node()
+    rclpy.shutdown()
+
+
+if __name__ == "__main__":
+    main()
+
+--- File: ./src/car_hardware/car_hardware/__init__.py ---
+
+--- File: ./src/car_hardware/car_hardware/teleop_keyboard_node.py ---
+#!/usr/bin/env python3
+"""
+Keyboard Teleop Node for RC Car
+"""
+
+import rclpy
+from rclpy.node import Node
+from geometry_msgs.msg import Twist
+import sys
+import select
+import termios
+import tty
+
+INSTRUCTIONS = """
+RC Car Keyboard Control
+-----------------------
+   w
+a  s  d
+
+w/s : increase/decrease speed
+a/d : turn left/right
+space : stop
+q : quit
+
+CTRL-C to quit
+"""
+
+class TeleopKeyboardNode(Node):
+    def __init__(self):
+        super().__init__('teleop_keyboard_node')
+        
+        # Parameters
+        self.declare_parameter('speed_step', 0.1)
+        self.declare_parameter('turn_step', 0.3)
+        self.declare_parameter('max_speed', 1.0)
+        self.declare_parameter('max_turn', 1.0)
+        
+        self.speed_step = self.get_parameter('speed_step').value
+        self.turn_step = self.get_parameter('turn_step').value
+        self.max_speed = self.get_parameter('max_speed').value
+        self.max_turn = self.get_parameter('max_turn').value
+        
+        # Publisher
+        self.cmd_vel_pub = self.create_publisher(Twist, 'cmd_vel', 10)
+        
+        # Current velocities
+        self.linear_vel = 0.0
+        self.angular_vel = 0.0
+        
+        # Terminal settings
+        self.settings = termios.tcgetattr(sys.stdin)
+        
+        self.get_logger().info('Teleop Keyboard Node initialized')
+        print(INSTRUCTIONS)
+    
+    def get_key(self, timeout=0.1):
+        """Get keyboard input"""
+        tty.setraw(sys.stdin.fileno())
+        rlist, _, _ = select.select([sys.stdin], [], [], timeout)
+        if rlist:
+            key = sys.stdin.read(1)
+        else:
+            key = ''
+        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.settings)
+        return key
+    
+    def publish_twist(self):
+        """Publish velocity"""
+        twist = Twist()
+        twist.linear.x = self.linear_vel
+        twist.angular.z = self.angular_vel
+        self.cmd_vel_pub.publish(twist)
+        print(f'\rSpeed: {self.linear_vel:.2f} m/s | Turn: {self.angular_vel:.2f} rad/s', end='')
+    
+    def run(self):
+        """Main loop"""
+        try:
+            while rclpy.ok():
+                key = self.get_key()
+                
+                if key == 'w':
+                    self.linear_vel = min(self.linear_vel + self.speed_step, self.max_speed)
+                elif key == 's':
+                    self.linear_vel = max(self.linear_vel - self.speed_step, -self.max_speed)
+                elif key == 'a':
+                    self.angular_vel = min(self.angular_vel + self.turn_step, self.max_turn)
+                elif key == 'd':
+                    self.angular_vel = max(self.angular_vel - self.turn_step, -self.max_turn)
+                elif key == ' ':
+                    self.linear_vel = 0.0
+                    self.angular_vel = 0.0
+                elif key == 'q':
+                    break
+                
+                self.publish_twist()
+                
+        except Exception as e:
+            self.get_logger().error(f'Error: {e}')
+        finally:
+            self.linear_vel = 0.0
+            self.angular_vel = 0.0
+            self.publish_twist()
+            termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.settings)
+
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = TeleopKeyboardNode()
+    
+    try:
+        node.run()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()
+
+--- File: ./src/car_hardware/test/test_copyright.py ---
+# Copyright 2015 Open Source Robotics Foundation, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+from ament_copyright.main import main
+import pytest
+
+
+# Remove the `skip` decorator once the source file(s) have a copyright header
+@pytest.mark.skip(reason='No copyright header has been placed in the generated source file.')
+@pytest.mark.copyright
+@pytest.mark.linter
+def test_copyright():
+    rc = main(argv=['.', 'test'])
+    assert rc == 0, 'Found errors'
+
+--- File: ./src/car_hardware/test/test_pep257.py ---
+# Copyright 2015 Open Source Robotics Foundation, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+from ament_pep257.main import main
+import pytest
+
+
+@pytest.mark.linter
+@pytest.mark.pep257
+def test_pep257():
+    rc = main(argv=['.', 'test'])
+    assert rc == 0, 'Found code style errors / warnings'
+
+--- File: ./src/car_hardware/test/test_flake8.py ---
+# Copyright 2017 Open Source Robotics Foundation, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+from ament_flake8.main import main_with_errors
+import pytest
+
+
+@pytest.mark.flake8
+@pytest.mark.linter
+def test_flake8():
+    rc, errors = main_with_errors(argv=[])
+    assert rc == 0, \
+        'Found %d code style errors / warnings:\n' % len(errors) + \
+        '\n'.join(errors)
+
+--- File: ./codebase.txt ---
+
+--- File: ./create_codebase.sh ---
+#!/bin/bash
+
+# A script to convert a codebase into a single text file with hierarchy,
+# ignoring specified files and directories.
+
+# Set the output file name
+OUTPUT_FILE="codebase.txt"
+
+# Set the root directory of your codebase
+# By default, it uses the current directory where the script is run
+CODE_ROOT_DIR="."
+
+# Define the files and directories to ignore 🚫
+# IMPORTANT: Directories MUST end with a trailing slash to be correctly ignored.
+# This tells the script's logic to use the efficient -prune option.
+EXCLUDE_LIST=(
+    ".git/"
+    "node_modules/"
+    "__pycache__/"
+    "dist/"
+    "*.log"
+    "*.pyc"
+    "*.avi"
+    "build/"
+    "install/"
+    "log"
+    "README.md"
+)
+
+# Clear the output file if it exists
+> "$OUTPUT_FILE"
+
+echo "Generating codebase hierarchy..."
+# Convert the bash array to a format 'tree' understands: 'pattern1|pattern2|...'
+EXCLUDE_STRING=$(printf "%s|" "${EXCLUDE_LIST[@]}")
+EXCLUDE_STRING=${EXCLUDE_STRING%?} # Remove the last pipe character
+
+# Use 'tree' with the -I option to exclude directories and files
+tree -a -I "$EXCLUDE_STRING" "$CODE_ROOT_DIR" >> "$OUTPUT_FILE"
+
+echo "" >> "$OUTPUT_FILE"
+echo "==========================================" >> "$OUTPUT_FILE"
+echo "" >> "$OUTPUT_FILE"
+
+echo "Concatenating file contents..."
+
+# Build the find command dynamically to apply exclusions correctly
+FIND_CMD="find \"$CODE_ROOT_DIR\""
+
+# Add the exclusion logic for each item
+for item in "${EXCLUDE_LIST[@]}"; do
+    if [[ "$item" == */ ]]; then
+        # This is a directory, use -prune to skip it and its contents
+        FIND_CMD+=" -path \"$CODE_ROOT_DIR/${item%?}\" -prune -o"
+    else
+        # This is a file, use ! -name to exclude it
+        FIND_CMD+=" -name \"$item\" -prune -o"
+    fi
+done
+
+# Add the final -type f to select only files that haven't been pruned
+FIND_CMD+=" -type f -print0"
+
+# Use eval to execute the dynamically built find command, and pipe to while loop
+eval "$FIND_CMD" | while IFS= read -r -d $'\0' file; do
+    echo "--- File: $file ---" >> "$OUTPUT_FILE"
+    cat "$file" >> "$OUTPUT_FILE"
+    echo "" >> "$OUTPUT_FILE" # Add a newline for separation
+done
+
+echo "Done! Codebase has been exported to $OUTPUT_FILE"
+

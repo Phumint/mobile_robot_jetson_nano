@@ -24,6 +24,8 @@ setup(
         'console_scripts': [
             'stm32_driver = car_hardware.stm32_driver_node:main',
             'teleop_keyboard = car_hardware.teleop_keyboard_node:main',
+            'game_control_cli = car_hardware.game_control_cli:main',
+
         ],
     },
 )

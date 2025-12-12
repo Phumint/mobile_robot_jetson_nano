@@ -187,6 +187,8 @@ setup(
         'console_scripts': [
             'stm32_driver = car_hardware.stm32_driver_node:main',
             'teleop_keyboard = car_hardware.teleop_keyboard_node:main',
+            'game_control_cli = car_hardware.game_control_cli:main',
+
         ],
     },
 )
@@ -200,10 +202,12 @@ install_scripts=$base/lib/car_hardware
 --- File: ./src/car_hardware/car_hardware/stm32_driver_node.py ---
 #!/usr/bin/env python3
 """
-STM32 Driver Node (stable version)
-Reads STM32 packets:
-  $ENC,<count>;IMU,ax,ay,az,gx,gy,gz,roll,pitch*
-Controls motor & steering.
+STM32 Driver Node (Optimized)
+Improvements: 
+1. Dynamic dt calculation for accurate Yaw integration.
+2. Allows steering wheels to turn even when stopped.
+3. Thread-safe serial writes.
+4. Robust shutdown procedure.
 """
 
 import rclpy
@@ -220,198 +224,222 @@ class STM32DriverNode(Node):
     def __init__(self):
         super().__init__('stm32_driver_node')
 
-        # Parameters
+        # --- Parameters ---
         self.declare_parameter('serial_port', '/dev/ttyTHS1')
         self.declare_parameter('baud_rate', 115200)
         self.declare_parameter('wheel_base', 0.25)
-        self.declare_parameter('max_speed', 1.0)
-        self.declare_parameter('max_steering_angle', 40.0)
+        self.declare_parameter('max_speed_m_s', 1.0) # Renamed for clarity
+        self.declare_parameter('max_steering_angle_deg', 40.0)
 
         self.port = self.get_parameter('serial_port').value
         self.baud = self.get_parameter('baud_rate').value
         self.wheel_base = self.get_parameter('wheel_base').value
-        self.max_speed = self.get_parameter('max_speed').value
-        self.max_steering_angle = self.get_parameter('max_steering_angle').value
+        self.max_speed = self.get_parameter('max_speed_m_s').value
+        self.max_steer = self.get_parameter('max_steering_angle_deg').value
 
-        # Try to open serial port
+        # --- Serial Connection ---
         self.serial = None
+        self.serial_lock = threading.Lock() # Prevent read/write collisions
         self._open_serial()
 
-        # Publishers
+        # --- ROS2 Interfaces ---
         self.encoder_pub = self.create_publisher(Int32, 'encoder_count', 10)
         self.imu_pub = self.create_publisher(Imu, 'imu/data_raw', 10)
-
-        # Subscriber
+        
         self.cmd_vel_sub = self.create_subscription(
             Twist, 'cmd_vel', self.cmd_vel_callback, 10
         )
 
-        # Thread control
-        self.running = True
-        self.thread = threading.Thread(target=self.serial_thread, daemon=True)
-        self.thread.start()
-
+        # --- State Variables ---
+        self.last_imu_time = self.get_clock().now()
         self.integrated_yaw = 0.0
+        
+        # --- Threading ---
+        self.running = True
+        self.read_thread = threading.Thread(target=self.serial_read_loop, daemon=True)
+        self.read_thread.start()
 
-        self.get_logger().info("STM32 Driver Node initialized")
+        self.get_logger().info("STM32 Driver Node initialized.")
 
     def _open_serial(self):
         try:
+            if self.serial and self.serial.is_open:
+                self.serial.close()
             self.serial = serial.Serial(self.port, self.baud, timeout=0.1)
             self.get_logger().info(f"Connected to STM32 on {self.port}")
         except Exception as e:
-            self.get_logger().error(f"Failed to open serial port {self.port}: {e}")
+            self.get_logger().error(f"Failed to open serial port: {e}")
             self.serial = None
 
     # ---------------------------
-    # SEND MOTOR & STEERING CMD
+    #  CMD_VEL CALLBACK (Control)
     # ---------------------------
     def cmd_vel_callback(self, msg):
         linear = msg.linear.x
         angular = msg.angular.z
 
-        # Motor speed (-100 to 100)
-        speed = int((linear / self.max_speed) * 100)
-        speed = max(-100, min(100, speed))
-
-        # Ackermann steering
-        if abs(linear) > 0.01:
-            steering_rad = math.atan(angular * self.wheel_base / linear)
+        # 1. Calculate Steering (Ackermann)
+        # We allow steering even if linear speed is 0 (maneuvering)
+        if abs(angular) > 0.001:
+            # Avoid division by zero: assume a tiny velocity if stopped
+            safe_linear = linear if abs(linear) > 0.01 else 0.01
+            # tan(theta) = (angular_vel * wheelbase) / linear_vel
+            steering_rad = math.atan((angular * self.wheel_base) / safe_linear)
+            
+            # If reversing, the steering direction logic flips in some models,
+            # but usually for a standard car, the servo angle remains physically consistent.
+            # We keep it standard here.
             steering_deg = math.degrees(steering_rad)
         else:
-            steering_deg = 0
+            steering_deg = 0.0
 
-        steering_deg = max(-self.max_steering_angle, min(self.max_steering_angle, steering_deg))
+        # Clamp steering
+        steering_deg = max(-self.max_steer, min(self.max_steer, steering_deg))
 
-        # Servo mapping
-        servo = 90 - int(steering_deg)
-        servo = max(50, min(130, servo))
+        # Map to Servo (90 is center, 50-130 range)
+        # Note: Check if positive steering_deg should be Left or Right for your specific servo
+        servo_cmd = 90 - int(steering_deg) 
+        servo_cmd = max(50, min(130, servo_cmd))
 
-        self.send_cmd(speed, servo)
+        # 2. Calculate Motor Speed
+        # Map m/s to -100 to 100 PWM
+        speed_cmd = int((linear / self.max_speed) * 100)
+        speed_cmd = max(-100, min(100, speed_cmd))
 
-    def send_cmd(self, speed, servo):
+        self.send_packet(speed_cmd, servo_cmd)
+
+    def send_packet(self, speed, angle):
         if not self.serial:
             return
+        
+        packet = f"#CMD,{speed},{angle}*\n" # Added \n for robustness
         try:
-            packet = f"#CMD,{speed},{servo}*"
-            self.serial.write(packet.encode())
+            with self.serial_lock:
+                self.serial.write(packet.encode())
         except Exception as e:
-            self.get_logger().warn(f"Failed to send command: {e}")
+            self.get_logger().warn(f"Serial write failed: {e}")
+            self._open_serial()
 
     # ---------------------------
-    # SERIAL READING THREAD
+    #  SERIAL READ LOOP
     # ---------------------------
-    def serial_thread(self):
-        while self.running:
+    def serial_read_loop(self):
+        while self.running and rclpy.ok():
             if not self.serial:
-                time.sleep(0.5)
+                time.sleep(1)
                 self._open_serial()
                 continue
 
             try:
-                line = self.serial.readline().decode(errors='ignore').strip()
-
+                # readline blocks for timeout (0.1s)
+                line = self.serial.readline().decode('utf-8', errors='ignore').strip()
+                
                 if not line:
-                    continue
+                    continue # Timeout or empty
 
-                if not (line.startswith('$') and line.endswith('*')):
-                    continue
-
-                self.parse_packet(line)
-
+                # Validate Packet Format
+                if line.startswith('$') and line.endswith('*'):
+                    self.parse_sensor_data(line)
+            
+            except serial.SerialException:
+                self.get_logger().error("Serial connection lost.")
+                self.serial.close()
+                self.serial = None
             except Exception as e:
-                self.get_logger().warn(f"Serial read warning: {e}")
-                time.sleep(0.1)
+                self.get_logger().warn(f"Read error: {e}")
 
     # ---------------------------
-    # PACKET PARSER
+    #  PARSING & PUBLISHING
     # ---------------------------
-    def parse_packet(self, line):
-        # Remove $ and *
-        core = line[1:-1]
-        parts = core.split(';')
+    def parse_sensor_data(self, line):
+        # Format: $ENC,12345;IMU,ax,ay,az,gx,gy,gz,roll,pitch*
+        try:
+            content = line[1:-1] # Strip $ and *
+            parts = content.split(';')
+            
+            for part in parts:
+                if part.startswith("ENC"):
+                    self.handle_encoder(part)
+                elif part.startswith("IMU"):
+                    self.handle_imu(part)
+        except ValueError:
+            pass # Malformed numbers
 
-        enc_part = parts[0]
-        imu_part = parts[1]
+    def handle_encoder(self, part):
+        # part = "ENC,12345"
+        try:
+            val = int(part.split(',')[1])
+            msg = Int32()
+            msg.data = val
+            self.encoder_pub.publish(msg)
+        except IndexError:
+            pass
 
-        # ----- Encoder -----
-        if enc_part.startswith("ENC,"):
-            try:
-                count = int(enc_part.split(',')[1])
-                msg = Int32()
-                msg.data = count
-                self.encoder_pub.publish(msg)
-            except:
-                pass
+    def handle_imu(self, part):
+        # part = "IMU,ax,ay,az,gx,gy,gz,roll,pitch" (integers scaled)
+        # SCALING MUST MATCH STM32 CODE:
+        # Accel / 1000.0, Gyro / 100.0, Euler / 100.0
+        vals = part.split(',')[1:]
+        if len(vals) < 8: return
 
-        # ----- IMU -----
-        if imu_part.startswith("IMU,"):
-            vals = imu_part.split(',')[1:]
-            if len(vals) >= 8:
-                try:
-                    ax = int(vals[0]) / 1000.0
-                    ay = int(vals[1]) / 1000.0
-                    az = int(vals[2]) / 1000.0
-                    gx = int(vals[3]) / 100.0
-                    gy = int(vals[4]) / 100.0
-                    gz = int(vals[5]) / 100.0
-                    roll = int(vals[6]) / 100.0
-                    pitch = int(vals[7]) / 100.0
+        ax = float(vals[0]) / 1000.0
+        ay = float(vals[1]) / 1000.0
+        az = float(vals[2]) / 1000.0
+        gx = float(vals[3]) / 100.0
+        gy = float(vals[4]) / 100.0
+        gz = float(vals[5]) / 100.0
+        # roll/pitch ignored for orientation calculation 
+        # because we calculate quaternion from gyro integration + accel usually, 
+        # but here we just use what we have.
 
-                    self.publish_imu(ax, ay, az, gx, gy, gz, roll, pitch)
-                except:
-                    pass
+        # --- Dynamic Time Integration ---
+        current_time = self.get_clock().now()
+        dt = (current_time - self.last_imu_time).nanoseconds / 1e9
+        self.last_imu_time = current_time
 
-    # ---------------------------
-    # IMU MESSAGE PUBLISHER
-    # ---------------------------
-    def publish_imu(self, ax, ay, az, gx, gy, gz, roll, pitch):
+        # Avoid integration spikes if connection lagged
+        if dt > 1.0: dt = 0.0 
+
+        # Integrate Yaw (Gyro Z)
+        self.integrated_yaw += math.radians(gz) * dt
+
+        self.publish_imu_msg(ax, ay, az, gx, gy, gz)
+
+    def publish_imu_msg(self, ax, ay, az, gx, gy, gz):
         msg = Imu()
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.header.frame_id = "imu_link"
 
+        # Linear Accel
         msg.linear_acceleration.x = ax * 9.81
         msg.linear_acceleration.y = ay * 9.81
         msg.linear_acceleration.z = az * 9.81
 
+        # Angular Velocity
         msg.angular_velocity.x = math.radians(gx)
         msg.angular_velocity.y = math.radians(gy)
         msg.angular_velocity.z = math.radians(gz)
 
-        dt = 0.1
-        self.integrated_yaw += math.radians(gz) * dt
-
+        # Orientation (Quaternion from Yaw only for planar robot)
+        # Assuming the robot stays mostly flat, we simplify to Yaw rotation
         cy = math.cos(self.integrated_yaw * 0.5)
         sy = math.sin(self.integrated_yaw * 0.5)
-        cp = math.cos(math.radians(pitch) * 0.5)
-        sp = math.sin(math.radians(pitch) * 0.5)
-        cr = math.cos(math.radians(roll) * 0.5)
-        sr = math.sin(math.radians(roll) * 0.5)
-
-        msg.orientation.w = cr * cp * cy + sr * sp * sy
-        msg.orientation.x = sr * cp * cy - cr * sp * sy
-        msg.orientation.y = cr * sp * cy + sr * cp * sy
-        msg.orientation.z = cr * cp * sy - sr * sp * cy
-
-        msg.orientation_covariance = [0.01,0,0, 0,0.01,0, 0,0,0.1]
-        msg.angular_velocity_covariance = [0.01,0,0, 0,0.01,0, 0,0,0.01]
-        msg.linear_acceleration_covariance = [0.01,0,0, 0,0.01,0, 0,0,0.01]
+        
+        # Simple Yaw-only Quaternion (w, x, y, z)
+        msg.orientation.w = cy
+        msg.orientation.x = 0.0
+        msg.orientation.y = 0.0
+        msg.orientation.z = sy
 
         self.imu_pub.publish(msg)
 
-    # ---------------------------
-    # CLEANUP
-    # ---------------------------
     def destroy_node(self):
         self.running = False
-        time.sleep(0.1)
+        # Stop the robot on shutdown
+        self.send_packet(0, 90) 
         if self.serial:
-            try:
-                self.serial.close()
-            except:
-                pass
+            self.serial.close()
         super().destroy_node()
-
 
 def main(args=None):
     rclpy.init(args=args)
@@ -420,15 +448,194 @@ def main(args=None):
         rclpy.spin(node)
     except KeyboardInterrupt:
         pass
-    node.destroy_node()
-    rclpy.shutdown()
-
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
 
 if __name__ == "__main__":
     main()
-
 --- File: ./src/car_hardware/car_hardware/__init__.py ---
 
+--- File: ./src/car_hardware/car_hardware/game_control_cli.py ---
+#!/usr/bin/env python3
+import rclpy
+from rclpy.node import Node
+from geometry_msgs.msg import Twist
+import sys, select, termios, tty
+import time
+import numpy as np
+
+# --- CONFIGURATION ---
+REAL_MAX_SPEED_M_S = 1.0     # 1.0 m/s
+REAL_WHEELBASE_M = 0.25      # 0.25m
+STEER_LIMIT_DEG = 40.0       # Max steering angle
+CMD_FREQ = 20.0              # Hz
+LOOP_TIMEOUT = 1.0 / CMD_FREQ # New: Timeout used to control loop rate
+
+# Physics / Feel
+ACCEL_STEP = 0.05            # Speed increase per loop while holding W
+BRAKE_STEP = 0.10            # Speed decrease per loop while holding S
+STEER_STEP = 4.0             # Degrees change per loop
+FRICTION   = 0.02            # Deceleration when key released
+STEER_CENTERING = 2.0        # Auto-center steering when key released
+
+# Timeout to detect "key release"
+KEY_TIMEOUT = 0.15          
+
+class KeyboardController(Node):
+    def __init__(self):
+        super().__init__('game_control_cli')
+        self.publisher_ = self.create_publisher(Twist, 'cmd_vel', 10)
+        
+        # Save and set terminal settings once
+        self.settings = termios.tcgetattr(sys.stdin)
+        tty.setraw(sys.stdin.fileno()) # Set raw mode once for the duration of the node
+        
+        # State
+        self.speed = 0.0     # -1.0 to 1.0
+        self.steer = 0.0     # Degrees
+        self.last_key_time = time.time()
+        self.key_pressed = None
+
+        print(f"""
+        ---------------------------
+          WASD GAME CONTROLLER
+        ---------------------------
+          W : Accelerate
+          S : Brake / Reverse
+          A : Steer Left
+          D : Steer Right
+        SPACE : E-Stop
+        ---------------------------
+        Running... Press Ctrl+C to quit.
+        """)
+
+    def get_key(self, timeout=LOOP_TIMEOUT):
+        """Non-blocking keyboard read, assumes terminal is already in raw mode."""
+        # Check for key press using select with a timeout
+        rlist, _, _ = select.select([sys.stdin], [], [], timeout) 
+        if rlist:
+            # Read a character
+            key = sys.stdin.read(1)
+        else:
+            key = ''
+        return key
+
+    def control_logic(self, key):
+        """
+        Calculates new speed/steer states based on key press 
+        and publishes the Twist message.
+        """
+        
+        # Determine user input
+        if key in ['w', 's', 'a', 'd', ' ']:
+            self.last_key_time = time.time()
+            self.key_pressed = key
+        elif key == '\x03': # Ctrl+C
+            raise KeyboardInterrupt # Use an exception to cleanly exit the run loop
+            
+        # Check for key release (timeout)
+        if time.time() - self.last_key_time > KEY_TIMEOUT:
+            self.key_pressed = None
+
+        # --- PHYSICS LOGIC ---
+        
+        # Throttle (W/S)
+        if self.key_pressed == 'w':
+            self.speed += ACCEL_STEP
+        elif self.key_pressed == 's':
+            self.speed -= BRAKE_STEP
+        elif self.key_pressed == ' ':
+            self.speed = 0.0
+            self.steer = 0.0
+        else:
+            # Friction (Coast to stop)
+            if self.speed > 0: self.speed -= FRICTION
+            if self.speed < 0: self.speed += FRICTION
+            if abs(self.speed) < FRICTION: self.speed = 0.0
+
+        # Steering (A/D)
+        if self.key_pressed == 'a':
+            self.steer += STEER_STEP
+        elif self.key_pressed == 'd':
+            self.steer -= STEER_STEP
+        else:
+            # Auto-Center
+            if self.steer > 0: self.steer -= STEER_CENTERING
+            if self.steer < 0: self.steer += STEER_CENTERING
+            if abs(self.steer) < STEER_CENTERING: self.steer = 0.0
+
+        # Clamping
+        self.speed = np.clip(self.speed, -1.0, 1.0)
+        self.steer = np.clip(self.steer, -STEER_LIMIT_DEG, STEER_LIMIT_DEG)
+
+        self.publish_cmd()
+
+    def publish_cmd(self):
+        msg = Twist()
+        
+        # Map percentage to real speed
+        msg.linear.x = float(self.speed * REAL_MAX_SPEED_M_S)
+        
+        # Calculate Angular Velocity for Ackermann
+        # w = (v * tan(theta)) / L
+        steer_rad = np.radians(self.steer)
+        
+        # Small trick: Allow steering even if stopped (send tiny speed)
+        # to prevent division by zero or logic errors in driver
+        calc_speed = msg.linear.x if abs(msg.linear.x) > 0.01 else 0.01
+        
+        msg.angular.z = float((calc_speed * np.tan(steer_rad)) / REAL_WHEELBASE_M)
+
+        self.publisher_.publish(msg)
+        
+        # Print status line (overwrite same line)
+        sys.stdout.write(f"\rSpeed: {self.speed*100:3.0f}% | Steer: {self.steer:3.0f} deg   ")
+        sys.stdout.flush()
+
+    def run(self):
+        """Main execution loop that replaces rclpy.spin() for teleop."""
+        while rclpy.ok():
+            try:
+                # 1. Get key input (blocks for LOOP_TIMEOUT)
+                key = self.get_key(timeout=LOOP_TIMEOUT)
+                
+                # 2. Process logic and publish
+                self.control_logic(key)
+                
+                # 3. Allow ROS to process any pending callbacks (like timer/subscriptions if added later)
+                rclpy.spin_once(self, timeout_sec=0) 
+                
+            except KeyboardInterrupt:
+                break
+            except Exception as e:
+                self.get_logger().error(f'Runtime Error: {e}')
+                break
+        
+        # Cleanup when the loop exits
+        self.shutdown()
+
+
+    def shutdown(self):
+        print("\nStopping...")
+        # Send zero velocity command
+        msg = Twist()
+        self.publisher_.publish(msg)
+        
+        # Restore terminal settings
+        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.settings)
+        
+        self.destroy_node()
+        rclpy.shutdown()
+        sys.exit(0) # Exit cleanly
+
+def main():
+    rclpy.init()
+    node = KeyboardController()
+    node.run() # Start the main control loop
+
+if __name__ == '__main__':
+    main()
 --- File: ./src/car_hardware/car_hardware/teleop_keyboard_node.py ---
 #!/usr/bin/env python3
 """
@@ -704,4 +911,10 @@ eval "$FIND_CMD" | while IFS= read -r -d $'\0' file; do
 done
 
 echo "Done! Codebase has been exported to $OUTPUT_FILE"
+
+--- File: ./.gitignore ---
+build/
+install/
+log/
+.vscode/
 

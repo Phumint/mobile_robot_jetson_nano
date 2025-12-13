@@ -25,9 +25,9 @@ class STM32DriverNode(Node):
         # --- Parameters ---
         self.declare_parameter('serial_port', '/dev/ttyTHS1')
         self.declare_parameter('baud_rate', 115200)
-        self.declare_parameter('wheel_base', 0.25)
+        self.declare_parameter('wheel_base', 0.135)
         self.declare_parameter('max_speed_m_s', 0.5) # Renamed for clarity
-        self.declare_parameter('max_steering_angle_deg', 40.0)
+        self.declare_parameter('max_steering_angle_deg', 25.0)
 
         self.port = self.get_parameter('serial_port').value
         self.baud = self.get_parameter('baud_rate').value

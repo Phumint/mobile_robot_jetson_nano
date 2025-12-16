@@ -66,7 +66,10 @@ class LaneDetectionNode(Node):
 
     def detect_lane_frame(self, frame):
         height, width = frame.shape[:2]
-        roi_points = np.array([[(0, height - 30), (width, height - 30), (width, int(height * 0.8)), (0, int(height * 0.8))]], dtype=np.int32)
+        # roi_points = np.array([[(0, height - 30), (width, height - 30), (width, int(height * 0.8)), (0, int(height * 0.8))]], dtype=np.int32)
+        roi_points = np.array([[(16, 475), (159, 241), (503, 237), (638, 444), (17, 477)]], dtype=np.int32)
+
+
 
         # Perspective Transform
         pts1 = np.float32([roi_points[0][3], roi_points[0][0], roi_points[0][2], roi_points[0][1]])
@@ -76,8 +79,8 @@ class LaneDetectionNode(Node):
 
         # Color Mask (Blue)
         hsv = cv2.cvtColor(warped, cv2.COLOR_BGR2HSV)
-        lower_blue = np.array([86, 40, 0])
-        upper_blue = np.array([150, 255, 255])
+        lower_blue = np.array([79, 0, 183])
+        upper_blue = np.array([122, 255, 255])
         mask = cv2.inRange(hsv, lower_blue, upper_blue)
 
         lx, rx = self.sliding_window_lane(mask)

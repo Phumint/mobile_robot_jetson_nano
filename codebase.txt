@@ -3,8 +3,10 @@
 ├── create_codebase.sh
 ├── .git
 │   ├── branches
+│   ├── COMMIT_EDITMSG
 │   ├── config
 │   ├── description
+│   ├── FETCH_HEAD
 │   ├── HEAD
 │   ├── hooks
 │   │   ├── applypatch-msg.sample
@@ -28,7 +30,8 @@
 │   │       │   └── main
 │   │       └── remotes
 │   │           └── origin
-│   │               └── HEAD
+│   │               ├── HEAD
+│   │               └── main
 │   ├── objects
 │   │   ├── 05
 │   │   │   └── 93516dfd300216bc37ef160c0898fe744d6ce7
@@ -49,6 +52,8 @@
 │   │   │   └── 1df454d52249826b4eef68d24409304cb55f15
 │   │   ├── 1f
 │   │   │   └── fdfe703ed41637c1b09cbecd7d41dc898c3835
+│   │   ├── 24
+│   │   │   └── 8f4142698b844378cb5357eb6d0af1bbc42a0d
 │   │   ├── 25
 │   │   │   └── f0d316b87c2bd8511e7b0e44f6e75c69dc66da
 │   │   ├── 26
@@ -146,6 +151,8 @@
 │   │   ├── ac
 │   │   │   ├── 74d1e6bd19665f5f3e21a59f35b25df4a4ccad
 │   │   │   └── a4541a698c2c127851e955efb7953b4f30aa3b
+│   │   ├── b1
+│   │   │   └── 126c532d8316d0fadb088c8a2248d0f20a8190
 │   │   ├── b2
 │   │   │   └── 34a3840f4c5bd38f043638c8622b8f240e1185
 │   │   ├── b4
@@ -153,6 +160,7 @@
 │   │   ├── b7
 │   │   │   └── e43c0e2aa6a5f7e8081a1fb392a42372c88567
 │   │   ├── be
+│   │   │   ├── 49498be7abea025140c4664f57ae8b50917f5b
 │   │   │   └── d9b4cfcd920abcc7a5478433dceb613ecbc57e
 │   │   ├── c3
 │   │   │   ├── 4cc62e60a73e0363cc4fbb40e3d62d8af6d97f
@@ -195,16 +203,34 @@
 │   │   │   └── 7ff4179e651276b8fd84e2d453fa2b3d25a287
 │   │   ├── info
 │   │   └── pack
+│   ├── ORIG_HEAD
 │   ├── packed-refs
 │   └── refs
 │       ├── heads
 │       │   └── main
 │       ├── remotes
 │       │   └── origin
-│       │       └── HEAD
+│       │       ├── HEAD
+│       │       └── main
 │       └── tags
 ├── .gitignore
 └── src
+    ├── car_autonomy
+    │   ├── car_autonomy
+    │   │   ├── __init__.py
+    │   │   ├── lane_detection.py
+    │   │   └── lane_follower.py
+    │   ├── launch
+    │   │   └── autonomy.launch.py
+    │   ├── package.xml
+    │   ├── resource
+    │   │   └── car_autonomy
+    │   ├── setup.cfg
+    │   ├── setup.py
+    │   └── test
+    │       ├── test_copyright.py
+    │       ├── test_flake8.py
+    │       └── test_pep257.py
     ├── car_bringup
     │   ├── CMakeLists.txt
     │   ├── config
@@ -230,9 +256,442 @@
             ├── test_flake8.py
             └── test_pep257.py
 
-101 directories, 129 files
+108 directories, 148 files
 
 ==========================================
+
+--- File: ./src/car_autonomy/resource/car_autonomy ---
+
+--- File: ./src/car_autonomy/launch/autonomy.launch.py ---
+from launch import LaunchDescription
+from launch_ros.actions import Node
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from ament_index_python.packages import get_package_share_directory
+import os
+
+def generate_launch_description():
+    
+    # 1. Include your EXISTING driver from car_bringup
+    # This ensures we use the correct ports and settings you already have
+    bringup_dir = get_package_share_directory('car_bringup')
+    sensors_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(bringup_dir, 'launch', 'sensors.launch.py')),
+        launch_arguments={'serial_port': '/dev/ttyTHS1'}.items()
+    )
+
+    return LaunchDescription([
+        # Start the Hardware
+        sensors_launch,
+
+        # Start Lane Detection
+        Node(
+            package='car_autonomy',
+            executable='lane_detection',
+            name='lane_detector',
+            output='screen',
+            parameters=[{'record': False, 't_section_turn': 'left'}]
+        ),
+
+        # Start Lane Follower (Controller)
+        Node(
+            package='car_autonomy',
+            executable='lane_follower',
+            name='lane_follower',
+            output='screen',
+            parameters=[{'max_speed_ms': 0.2}] # Start slow!
+        )
+    ])
+
+--- File: ./src/car_autonomy/package.xml ---
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>car_autonomy</name>
+  <version>0.0.0</version>
+  <description>TODO: Package description</description>
+  <maintainer email="phumint1969@gmail.com">root</maintainer>
+  <license>TODO: License declaration</license>
+
+  <depend>rclpy</depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
+
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
+
+--- File: ./src/car_autonomy/car_autonomy/lane_follower.py ---
+import rclpy
+import math
+from rclpy.node import Node
+from std_msgs.msg import Float32
+from geometry_msgs.msg import Twist
+
+class PID:
+    def __init__(self, Kp, Ki, Kd, output_limits=(-20, 20)):
+        self.Kp = Kp
+        self.Ki = Ki
+        self.Kd = Kd
+        self.min_out = output_limits[0]
+        self.max_out = output_limits[1]
+        self.prev_error = 0.0
+        self.integral = 0.0
+
+    def update(self, error):
+        p_out = self.Kp * error
+        self.integral += error
+        i_out = self.Ki * self.integral
+        derivative = error - self.prev_error
+        d_out = self.Kd * derivative
+        self.prev_error = error
+        output = p_out + i_out + d_out
+        return max(self.min_out, min(self.max_out, output))
+
+class ControllerNode(Node):
+    def __init__(self):
+        super().__init__('controller_node')
+        self.declare_parameter('max_speed_ms', 0.2)
+        self.max_speed_ms = self.get_parameter('max_speed_ms').value
+        self.lane_offset_value = 0.0
+        self.lane_heading_value = 0.0
+
+        self.lane_offset = self.create_subscription(Float32, 'lane_offset', self.offset_callback, 10)
+        self.lane_heading = self.create_subscription(Float32, 'lane_heading', self.heading_callback, 10)
+        
+        # Publishes cmd_vel for the STM32 driver
+        self.pub_cmd = self.create_publisher(Twist, 'cmd_vel', 10)
+        self.pid = PID(Kp=6.0, Ki=0.0, Kd=0.2, output_limits=(-25, 25))
+        self.base_speed_ratio = 1.0 
+        self.timer = self.create_timer(0.1, self.control_loop) 
+
+    def offset_callback(self, msg): self.lane_offset_value = msg.data
+    def heading_callback(self, msg): self.lane_heading_value = msg.data
+
+    def control_loop(self):
+        composite = float((20 * self.lane_offset_value * 0.8) + (20 * self.lane_heading_value * 0.2))
+        steer_angle_deg = -float(self.pid.update(composite))
+        
+        # Slow down on turns
+        reduction = (1 - min(abs(steer_angle_deg)/20, 1) * 0.5)
+        target_speed_ms = (self.base_speed_ratio * self.max_speed_ms) * reduction
+
+        msg = Twist()
+        msg.linear.x = float(target_speed_ms)
+        # Convert degrees to radians for the driver
+        msg.angular.z = float(math.radians(steer_angle_deg))
+        self.pub_cmd.publish(msg)
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = ControllerNode()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        node.pub_cmd.publish(Twist()) # Stop
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
+
+--- File: ./src/car_autonomy/car_autonomy/__init__.py ---
+
+--- File: ./src/car_autonomy/car_autonomy/lane_detection.py ---
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import Float32
+import cv2
+import numpy as np
+import threading
+import os
+
+class LaneDetectionNode(Node):
+    def __init__(self):
+        super().__init__('lane_detection_node')
+        self.pub_offset = self.create_publisher(Float32, 'lane_offset', 10)
+        self.pub_heading = self.create_publisher(Float32, 'lane_heading', 10)
+
+        # --- Parameters ---
+        self.declare_parameter('record', False)
+        self.declare_parameter('output_path', '/workspace/lane_output.avi')
+        self.declare_parameter('t_section_turn', 'left') 
+
+        self.record = self.get_parameter('record').get_parameter_value().bool_value
+        self.output_path = self.get_parameter('output_path').get_parameter_value().string_value
+        self.t_section_turn = self.get_parameter('t_section_turn').get_parameter_value().string_value.lower()
+        
+        # --- T-section State ---
+        self.t_section_active = False
+        self.t_section_frames = 0
+        self.T_SECTION_TURN_FRAMES = 50 
+        
+        # --- Camera setup ---
+        self.cap = cv2.VideoCapture(0)
+        if not self.cap.isOpened():
+            self.get_logger().warning("⚠️ Camera not opened (index 0).")
+        self.latest_frame = None
+        self.lock = threading.Lock()
+
+        # --- Video writer ---
+        self.out = None
+        if self.record:
+            os.makedirs(os.path.dirname(self.output_path), exist_ok=True)
+            fourcc = cv2.VideoWriter_fourcc(*'XVID')
+            self.out = cv2.VideoWriter(self.output_path, fourcc, 20.0, (640, 480))
+
+        # --- Threading ---
+        threading.Thread(target=self._capture_frames, daemon=True).start()
+        self.timer = self.create_timer(0.05, self.timer_callback)
+
+    def _capture_frames(self):
+        while True:
+            ret, frame = self.cap.read()
+            if ret:
+                frame = cv2.resize(frame, (640, 480))
+                with self.lock:
+                    self.latest_frame = frame
+
+    def detect_lane_frame(self, frame):
+        height, width = frame.shape[:2]
+        roi_points = np.array([[(0, height - 30), (width, height - 30), (width, int(height * 0.8)), (0, int(height * 0.8))]], dtype=np.int32)
+
+        # Perspective Transform
+        pts1 = np.float32([roi_points[0][3], roi_points[0][0], roi_points[0][2], roi_points[0][1]])
+        pts2 = np.float32([[0, 0], [0, height], [width, 0], [width, height]])
+        matrix = cv2.getPerspectiveTransform(pts1, pts2)
+        warped = cv2.warpPerspective(frame, matrix, (width, height))
+
+        # Color Mask (Blue)
+        hsv = cv2.cvtColor(warped, cv2.COLOR_BGR2HSV)
+        lower_blue = np.array([86, 40, 0])
+        upper_blue = np.array([150, 255, 255])
+        mask = cv2.inRange(hsv, lower_blue, upper_blue)
+
+        lx, rx = self.sliding_window_lane(mask)
+        lanes_missing = (len(lx) < 200 and len(rx) < 200)
+
+        # T-Section Logic
+        if lanes_missing and not self.t_section_active:
+            self.t_section_active = True
+            self.t_section_frames = 0
+            
+        if self.t_section_active:
+            if self.t_section_frames < self.T_SECTION_TURN_FRAMES:
+                self.t_section_frames += 1
+                heading_rad = np.pi/4 if self.t_section_turn == 'right' else -np.pi/4
+                return 0.0, float(heading_rad), frame.copy()
+            else:
+                self.t_section_active = False
+
+        # Normal Lane Following
+        if len(lx) < 20 and len(rx) < 20:
+             return 0.0, 0.0, frame.copy()
+
+        left_fit = np.polyfit(np.arange(len(lx)), lx, 2) if len(lx) > 2 else None
+        right_fit = np.polyfit(np.arange(len(rx)), rx, 2) if len(rx) > 2 else None
+
+        y_eval = height * 0.9
+        heading_rad = 0.0
+        
+        if left_fit is not None and right_fit is not None:
+            left_slope = 2 * left_fit[0] * y_eval + left_fit[1]
+            right_slope = 2 * right_fit[0] * y_eval + right_fit[1]
+            lane_slope = (left_slope + right_slope) / 2.0
+            heading_rad = float(np.arctan(lane_slope))
+
+        lane_center = (np.mean(lx) + np.mean(rx)) / 2
+        pixel_offset = lane_center - width / 2
+        offset_norm = pixel_offset / (width / 2)
+
+        return float(offset_norm), float(heading_rad), frame.copy()
+
+    def sliding_window_lane(self, mask):
+        histogram = np.sum(mask[mask.shape[0] // 2:, :], axis=0)
+        midpoint = histogram.shape[0] // 2
+        left_base = np.argmax(histogram[:midpoint])
+        right_base = np.argmax(histogram[midpoint:]) + midpoint
+        
+        n_windows = 12
+        window_height = mask.shape[0] // n_windows
+        nonzero = mask.nonzero()
+        nonzeroy, nonzerox = np.array(nonzero[0]), np.array(nonzero[1])
+        margin, minpix = 50, 50
+        lx, rx = [], []
+        l_current, r_current = left_base, right_base
+
+        for window in range(n_windows):
+            win_y_low = mask.shape[0] - (window + 1) * window_height
+            win_y_high = mask.shape[0] - window * window_height
+            win_xleft_low, win_xleft_high = l_current - margin, l_current + margin
+            win_xright_low, win_xright_high = r_current - margin, r_current + margin
+
+            good_left = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) & (nonzerox >= win_xleft_low) & (nonzerox < win_xleft_high)).nonzero()[0]
+            good_right = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) & (nonzerox >= win_xright_low) & (nonzerox < win_xright_high)).nonzero()[0]
+
+            if len(good_left) > minpix: l_current = int(np.mean(nonzerox[good_left]))
+            if len(good_right) > minpix: r_current = int(np.mean(nonzerox[good_right]))
+
+            lx.extend(nonzerox[good_left])
+            rx.extend(nonzerox[good_right])
+
+        return np.array(lx), np.array(rx)
+
+    def timer_callback(self):
+        with self.lock:
+            frame = self.latest_frame
+        if frame is not None:
+            offset, heading, visual = self.detect_lane_frame(frame)
+            msg_offset = Float32()
+            msg_offset.data = offset
+            self.pub_offset.publish(msg_offset)
+            msg_heading = Float32()
+            msg_heading.data = heading
+            self.pub_heading.publish(msg_heading)
+            if self.record and self.out: self.out.write(visual)
+
+    def cleanup(self):
+        if self.cap: self.cap.release()
+        if self.out: self.out.release()
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = LaneDetectionNode()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.cleanup()
+        node.destroy_node()
+        rclpy.shutdown()
+
+--- File: ./src/car_autonomy/setup.py ---
+from setuptools import setup
+import os
+from glob import glob
+
+package_name = 'car_autonomy'
+
+setup(
+    name=package_name,
+    version='0.0.0',
+    packages=[package_name],
+    data_files=[
+        ('share/ament_index/resource_index/packages',
+            ['resource/' + package_name]),
+        ('share/' + package_name, ['package.xml']),
+        
+        # --- ADD THIS BLOCK HERE ---
+        # This tells ROS: "Take everything in the 'launch' folder 
+        # and put it where ros2 launch can find it."
+        (os.path.join('share', package_name, 'launch'), glob('launch/*.launch.py')),
+        # ---------------------------
+    ],
+    install_requires=['setuptools'],
+    zip_safe=True,
+    maintainer='root',
+    maintainer_email='root@todo.todo',
+    description='Autonomy package',
+    license='TODO',
+    tests_require=['pytest'],
+    entry_points={
+        'console_scripts': [
+            'lane_detection = car_autonomy.lane_detection:main',
+            'lane_follower = car_autonomy.lane_follower:main',
+        ],
+    },
+)
+
+--- File: ./src/car_autonomy/setup.cfg ---
+[develop]
+script_dir=$base/lib/car_autonomy
+[install]
+install_scripts=$base/lib/car_autonomy
+
+--- File: ./src/car_autonomy/test/test_copyright.py ---
+# Copyright 2015 Open Source Robotics Foundation, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+from ament_copyright.main import main
+import pytest
+
+
+# Remove the `skip` decorator once the source file(s) have a copyright header
+@pytest.mark.skip(reason='No copyright header has been placed in the generated source file.')
+@pytest.mark.copyright
+@pytest.mark.linter
+def test_copyright():
+    rc = main(argv=['.', 'test'])
+    assert rc == 0, 'Found errors'
+
+--- File: ./src/car_autonomy/test/test_pep257.py ---
+# Copyright 2015 Open Source Robotics Foundation, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+from ament_pep257.main import main
+import pytest
+
+
+@pytest.mark.linter
+@pytest.mark.pep257
+def test_pep257():
+    rc = main(argv=['.', 'test'])
+    assert rc == 0, 'Found code style errors / warnings'
+
+--- File: ./src/car_autonomy/test/test_flake8.py ---
+# Copyright 2017 Open Source Robotics Foundation, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+from ament_flake8.main import main_with_errors
+import pytest
+
+
+@pytest.mark.flake8
+@pytest.mark.linter
+def test_flake8():
+    rc, errors = main_with_errors(argv=[])
+    assert rc == 0, \
+        'Found %d code style errors / warnings:\n' % len(errors) + \
+        '\n'.join(errors)
 
 --- File: ./src/car_bringup/launch/sensors.launch.py ---
 #!/usr/bin/env python3

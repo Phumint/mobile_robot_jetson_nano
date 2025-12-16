@@ -34,6 +34,6 @@ def generate_launch_description():
             executable='lane_follower',
             name='lane_follower',
             output='screen',
-            parameters=[{'max_speed_ms': 0.2}] # Start slow!
+            parameters=[{'max_speed_ms': 1.0}] # Start slow!
         )
     ])

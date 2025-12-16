@@ -1,3 +1,236 @@
+.
+├── codebase.txt
+├── create_codebase.sh
+├── .git
+│   ├── branches
+│   ├── config
+│   ├── description
+│   ├── HEAD
+│   ├── hooks
+│   │   ├── applypatch-msg.sample
+│   │   ├── commit-msg.sample
+│   │   ├── fsmonitor-watchman.sample
+│   │   ├── post-update.sample
+│   │   ├── pre-applypatch.sample
+│   │   ├── pre-commit.sample
+│   │   ├── prepare-commit-msg.sample
+│   │   ├── pre-push.sample
+│   │   ├── pre-rebase.sample
+│   │   ├── pre-receive.sample
+│   │   └── update.sample
+│   ├── index
+│   ├── info
+│   │   └── exclude
+│   ├── logs
+│   │   ├── HEAD
+│   │   └── refs
+│   │       ├── heads
+│   │       │   └── main
+│   │       └── remotes
+│   │           └── origin
+│   │               └── HEAD
+│   ├── objects
+│   │   ├── 05
+│   │   │   └── 93516dfd300216bc37ef160c0898fe744d6ce7
+│   │   ├── 0a
+│   │   │   ├── 28d630906fca8da875aea77af34d9cbf42640b
+│   │   │   └── 296f14b3d8f2cfcd8d0be0dd4b77c3d0fa4145
+│   │   ├── 0d
+│   │   │   └── 1c7383382fc64a9fc729a161e7f1612fb60e71
+│   │   ├── 0e
+│   │   │   └── 1fe2075a854c87f029b506a3fd7a8fcfb50dbc
+│   │   ├── 14
+│   │   │   └── 253db5d5378988b2b60257172c0f221b58d58c
+│   │   ├── 17
+│   │   │   └── 7f42ab3b94e7a53c3e721d719a4e1ea897789e
+│   │   ├── 19
+│   │   │   └── db1622f6b901b2f7c166e3795822d6522d5c27
+│   │   ├── 1e
+│   │   │   └── 1df454d52249826b4eef68d24409304cb55f15
+│   │   ├── 1f
+│   │   │   └── fdfe703ed41637c1b09cbecd7d41dc898c3835
+│   │   ├── 25
+│   │   │   └── f0d316b87c2bd8511e7b0e44f6e75c69dc66da
+│   │   ├── 26
+│   │   │   └── 2e86c8e0c168f25a1bdd678257e820e8b98285
+│   │   ├── 27
+│   │   │   ├── ccd8f5e7a92b9183ec9ec3215f21afd9744496
+│   │   │   └── ee1078ff077cc3a0fec75b7d023101a68164d1
+│   │   ├── 28
+│   │   │   └── 1338e48da3cdbca17efd5ca385e3f5e087c6dc
+│   │   ├── 29
+│   │   │   └── ea02eb44a1169299936b36944e22d4d18c58dc
+│   │   ├── 2d
+│   │   │   └── 8001a0c3e704b6e17103993c565e9a51749e5a
+│   │   ├── 2f
+│   │   │   └── d184a231084d36e27ccb7fcdd9302368cabcc0
+│   │   ├── 32
+│   │   │   └── 4a80c10474c81d1672bc59a68b0c8163fc75db
+│   │   ├── 4e
+│   │   │   ├── 2e6a4fb47dde9e23f4939f67022d551af2cf58
+│   │   │   └── dbce0a341de448dfdb01b728102d6f830a7ebe
+│   │   ├── 5a
+│   │   │   └── 1b1bdc72766fda41dff8141db633b600426300
+│   │   ├── 5d
+│   │   │   └── 3a809484ed37f8ce5bf1532b8aa3ae255590ab
+│   │   ├── 62
+│   │   │   └── 9eea032be0638e04bad9de5a56d463c95265b3
+│   │   ├── 63
+│   │   │   └── 54f2fdb971b6a6c9dda0b0e961efee9f6daaac
+│   │   ├── 64
+│   │   │   └── 51371ea5c508fd554618f3a26598821267d917
+│   │   ├── 65
+│   │   │   └── 85f9d98f954e9c0beb3880fcde25ed37e2c729
+│   │   ├── 66
+│   │   │   └── fb1949f25e52fa6b0ee59fb8a5fdd31f402343
+│   │   ├── 67
+│   │   │   └── c46885e80b68c07b396ad0685ff745c73743c3
+│   │   ├── 69
+│   │   │   └── 9928e2ec513ccf11c2937014f424488f135f7f
+│   │   ├── 6b
+│   │   │   └── 0d148ca8e221d8e7bb8328cb1b62b823cc6ae5
+│   │   ├── 6f
+│   │   │   └── c928825a70d274e13da6e04cdc5d2a9e8ec0cc
+│   │   ├── 71
+│   │   │   └── 22e489e3cf80c0a2c859b58daea26632388bb9
+│   │   ├── 73
+│   │   │   └── 7fcab0d498236648f8fac04381f3d87b0cc622
+│   │   ├── 75
+│   │   │   └── 260eaad7b1b5f7745954f043207ae0421662ea
+│   │   ├── 77
+│   │   │   └── e0b0551fd3535efc94f5eba50699782910ef1b
+│   │   ├── 78
+│   │   │   ├── 53735af580fae97fd4b55d3f5e9b6aa1dda353
+│   │   │   └── 6ca239ef6f5533c4f7ab6374d8402c1d724533
+│   │   ├── 7d
+│   │   │   └── 11704c363db43f3b7a8ec41b16b4f1fc56b8eb
+│   │   ├── 7e
+│   │   │   └── 273bd7f91e22f45185095841a3991fde99555d
+│   │   ├── 85
+│   │   │   └── 7bfe84873199b5e5bc4298961c3e0d954270c5
+│   │   ├── 86
+│   │   │   └── d9faaba8bde2700ffd55e34fc0efcd78661a5c
+│   │   ├── 87
+│   │   │   └── 3711199b5a7553691878c1e50c46b3cab41a7d
+│   │   ├── 8b
+│   │   │   └── ee9f9d300c55a8a3c5aa8bb18a78e167ba10d7
+│   │   ├── 8c
+│   │   │   └── 5035a6af9a7e2786cb469fb38ee95ea70f66c2
+│   │   ├── 8f
+│   │   │   └── 8195387c4904fabb126a4083be4071fdea52fc
+│   │   ├── 90
+│   │   │   └── 2c5dde7b954a26dfc1e9777e59b47b22f7ab5b
+│   │   ├── 91
+│   │   │   └── 96a00abb961cadb84694471a0f7544e88b9955
+│   │   ├── 92
+│   │   │   └── dddee4029292644283e0b03c92fd1451494e35
+│   │   ├── 96
+│   │   │   ├── 2ef7913f0f5c72735e52ce91870aee4b0cf8c4
+│   │   │   └── b8ab2f37626358c4c877be3f2bd6cf904cfa62
+│   │   ├── 97
+│   │   │   ├── a062b74fa007349f97f333a18ef8cfef03883d
+│   │   │   ├── a39196e84db97954341162a6d2e7f771d938c0
+│   │   │   └── cad041615d006744e8064e3a9ac3f9bcda07dc
+│   │   ├── 99
+│   │   │   ├── 367b3dd9fe87ac0a1e2fd9c78d0b0f348de18e
+│   │   │   └── f13cc9a1801f2be598d3f127515bb4411018c6
+│   │   ├── a3
+│   │   │   ├── 3ba79801135a1b80760603278883030aad2582
+│   │   │   └── b00b0b02b23663fc8c4352e40dfd3a324d1d01
+│   │   ├── a7
+│   │   │   └── 1b5c2e08d7df552608c5da4d9a519d10a54268
+│   │   ├── a9
+│   │   │   └── 7428b8d8f9e0e5c7279bc6405c3accf30002ad
+│   │   ├── ab
+│   │   │   └── 97494858835b42812bc20568da26c2d6cf5b5d
+│   │   ├── ac
+│   │   │   ├── 74d1e6bd19665f5f3e21a59f35b25df4a4ccad
+│   │   │   └── a4541a698c2c127851e955efb7953b4f30aa3b
+│   │   ├── b2
+│   │   │   └── 34a3840f4c5bd38f043638c8622b8f240e1185
+│   │   ├── b4
+│   │   │   └── 8769ba8602a0dd38794b29bebf26c2b43fc0b7
+│   │   ├── b7
+│   │   │   └── e43c0e2aa6a5f7e8081a1fb392a42372c88567
+│   │   ├── be
+│   │   │   └── d9b4cfcd920abcc7a5478433dceb613ecbc57e
+│   │   ├── c3
+│   │   │   ├── 4cc62e60a73e0363cc4fbb40e3d62d8af6d97f
+│   │   │   └── 7cdb3dfdf3edc255f237fa129e42f9eecdc885
+│   │   ├── c7
+│   │   │   └── b484412475e973b2cfb7a124f45beb8117f04f
+│   │   ├── cd
+│   │   │   └── af34fd9f6e32e4f42553aeba9ef8cd026b2f0c
+│   │   ├── d3
+│   │   │   └── 31f1e905dd7a8196e6463eea1714c715434225
+│   │   ├── dc
+│   │   │   └── 0cc9962e808dc31de91fe2b3b1d1a57dea448c
+│   │   ├── de
+│   │   │   └── 6efb7b8388e051911bbf60597d26f41857bcb1
+│   │   ├── e0
+│   │   │   └── 44a6f0bf3446b62dcafcca855b9bdd58db6d22
+│   │   ├── e1
+│   │   │   ├── 0029ef74a689b3d57c1e143db99d6bd7a2e519
+│   │   │   ├── 60d83e4484a90870d9dff75b99ea3d59d4c733
+│   │   │   └── d424048a11cfa453715055386d5bd0cfb75efd
+│   │   ├── e6
+│   │   │   └── 9de29bb2d1d6434b8b29ae775ad8c2e48c5391
+│   │   ├── e9
+│   │   │   └── c045470736d7ce5d06270060f665cb172209d9
+│   │   ├── ee
+│   │   │   └── 107a79f1d6563c84f1936aeed156f4bcaf9706
+│   │   ├── f0
+│   │   │   └── 94633808d51fa5f2ad823a5294ea2c7fff0779
+│   │   ├── f2
+│   │   │   └── a04a69b98f82e0db168fd2df57302e92abb2ff
+│   │   ├── f4
+│   │   │   └── 225db7828742b5e7d12aedb8658df60af399bf
+│   │   ├── f5
+│   │   │   └── 2ba7be902ad82d9b0432eceb4e6338e15e33c0
+│   │   ├── f9
+│   │   │   └── 57c1c9d85b54b93137524780ab3d3bc3364819
+│   │   ├── fa
+│   │   │   └── e6baf6ab8cf9b62de8285eeea7192addc4dfa0
+│   │   ├── fb
+│   │   │   └── 7ff4179e651276b8fd84e2d453fa2b3d25a287
+│   │   ├── info
+│   │   └── pack
+│   ├── packed-refs
+│   └── refs
+│       ├── heads
+│       │   └── main
+│       ├── remotes
+│       │   └── origin
+│       │       └── HEAD
+│       └── tags
+├── .gitignore
+└── src
+    ├── car_bringup
+    │   ├── CMakeLists.txt
+    │   ├── config
+    │   ├── launch
+    │   │   ├── sensors.launch.py
+    │   │   └── teleop.launch.py
+    │   └── package.xml
+    └── car_hardware
+        ├── car_hardware
+        │   ├── game_control_cli.py
+        │   ├── __init__.py
+        │   ├── __pycache__
+        │   ├── servo_calibration_node.py
+        │   ├── stm32_driver_node.py
+        │   └── teleop_keyboard_node.py
+        ├── package.xml
+        ├── resource
+        │   └── car_hardware
+        ├── setup.cfg
+        ├── setup.py
+        └── test
+            ├── test_copyright.py
+            ├── test_flake8.py
+            └── test_pep257.py
+
+101 directories, 129 files
 
 ==========================================
 
@@ -188,6 +421,7 @@ setup(
             'stm32_driver = car_hardware.stm32_driver_node:main',
             'teleop_keyboard = car_hardware.teleop_keyboard_node:main',
             'game_control_cli = car_hardware.game_control_cli:main',
+            'servo_calibration_node = car_hardware.servo_calibration_node:main',
 
         ],
     },
@@ -227,9 +461,9 @@ class STM32DriverNode(Node):
         # --- Parameters ---
         self.declare_parameter('serial_port', '/dev/ttyTHS1')
         self.declare_parameter('baud_rate', 115200)
-        self.declare_parameter('wheel_base', 0.25)
-        self.declare_parameter('max_speed_m_s', 1.0) # Renamed for clarity
-        self.declare_parameter('max_steering_angle_deg', 40.0)
+        self.declare_parameter('wheel_base', 0.135)
+        self.declare_parameter('max_speed_m_s', 0.5) # Renamed for clarity
+        self.declare_parameter('max_steering_angle_deg', 25.0)
 
         self.port = self.get_parameter('serial_port').value
         self.baud = self.get_parameter('baud_rate').value
@@ -278,31 +512,35 @@ class STM32DriverNode(Node):
         linear = msg.linear.x
         angular = msg.angular.z
 
+        # --- CALIBRATION VALUES ---
+        STEERING_RATIO = 2.07
+        SERVO_OFFSET   = 0
+        SERVO_MIN      = 20
+        SERVO_MAX      = 137
+        # --------------------------
+
         # 1. Calculate Steering (Ackermann)
-        # We allow steering even if linear speed is 0 (maneuvering)
         if abs(angular) > 0.001:
-            # Avoid division by zero: assume a tiny velocity if stopped
             safe_linear = linear if abs(linear) > 0.01 else 0.01
-            # tan(theta) = (angular_vel * wheelbase) / linear_vel
             steering_rad = math.atan((angular * self.wheel_base) / safe_linear)
-            
-            # If reversing, the steering direction logic flips in some models,
-            # but usually for a standard car, the servo angle remains physically consistent.
-            # We keep it standard here.
             steering_deg = math.degrees(steering_rad)
         else:
             steering_deg = 0.0
 
-        # Clamp steering
-        steering_deg = max(-self.max_steer, min(self.max_steer, steering_deg))
+        # 2. Apply Calibration to Servo
+        # Calculate the PWM shift required
+        pwm_shift = steering_deg * STEERING_RATIO
+        
+        # Apply to Center (90 + Offset)
+        # NOTE: If Positive angular (Left) makes the servo number GO DOWN (e.g. 90 -> 50), use MINUS.
+        # If Positive angular makes servo number GO UP, change this to PLUS.
+        servo_cmd = (90 + SERVO_OFFSET) - int(pwm_shift) 
+        
+        # 3. Safety Clamp (The most important part!)
+        # This prevents the servo from buzzing/burning out
+        servo_cmd = max(SERVO_MIN, min(SERVO_MAX, servo_cmd))
 
-        # Map to Servo (90 is center, 50-130 range)
-        # Note: Check if positive steering_deg should be Left or Right for your specific servo
-        servo_cmd = 90 - int(steering_deg) 
-        servo_cmd = max(50, min(130, servo_cmd))
-
-        # 2. Calculate Motor Speed
-        # Map m/s to -100 to 100 PWM
+        # 4. Calculate Motor Speed
         speed_cmd = int((linear / self.max_speed) * 100)
         speed_cmd = max(-100, min(100, speed_cmd))
 
@@ -456,6 +694,169 @@ if __name__ == "__main__":
     main()
 --- File: ./src/car_hardware/car_hardware/__init__.py ---
 
+--- File: ./src/car_hardware/car_hardware/servo_calibration_node.py ---
+#!/usr/bin/env python3
+import rclpy
+from rclpy.node import Node
+import serial
+import sys
+import termios
+import tty
+import time
+
+class ServoCalibrationNode(Node):
+    def __init__(self):
+        super().__init__('servo_calibration_node')
+
+        # --- Parameters ---
+        self.declare_parameter('serial_port', '/dev/ttyTHS1')
+        self.declare_parameter('baud_rate', 115200)
+
+        self.port = self.get_parameter('serial_port').value
+        self.baud = self.get_parameter('baud_rate').value
+
+        # --- Serial Connection ---
+        # We open this DIRECTLY (bypassing the main driver) to get raw access
+        try:
+            self.serial = serial.Serial(self.port, self.baud, timeout=0.1)
+            self.get_logger().info(f"Connected to STM32 on {self.port}")
+        except Exception as e:
+            self.get_logger().error(f"Failed to open serial port: {e}")
+            sys.exit(1)
+
+        self.servo_val = 90  # Start at center
+        self.print_instructions()
+
+    def print_instructions(self):
+        print("\n========================================")
+        print("   STM32 SERVO CALIBRATION NODE")
+        print("========================================")
+        print("Controls:")
+        print("  [a]   Left  (-1)")
+        print("  [d]   Right (+1)")
+        print("  [A]   Left  (-5)")
+        print("  [D]   Right (+5)")
+        print("  [s]   Reset Center (90)")
+        print("  [q]   Quit & Calculate Results")
+        print("----------------------------------------")
+
+    def get_key(self):
+        """Reads a single keypress from stdin"""
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(sys.stdin.fileno())
+            ch = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return ch
+
+    def send_cmd(self, angle):
+        """Sends raw #CMD packet. Speed is always 0 during calibration."""
+        # PACKET FORMAT: #CMD,speed,angle* (No newline \n)
+        packet = f"#CMD,0,{angle}*"
+        try:
+            self.serial.write(packet.encode())
+        except Exception as e:
+            self.get_logger().warn(f"Serial write failed: {e}")
+
+    def run(self):
+        # Interactive Loop
+        try:
+            # Initial center command
+            self.send_cmd(self.servo_val)
+            print(f"\rCurrent Servo PWM: {self.servo_val}", end="")
+
+            while rclpy.ok():
+                key = self.get_key()
+                
+                if key == 'a':
+                    self.servo_val -= 1
+                elif key == 'd':
+                    self.servo_val += 1
+                elif key == 'A':
+                    self.servo_val -= 5
+                elif key == 'D':
+                    self.servo_val += 5
+                elif key == 's':
+                    self.servo_val = 90
+                elif key == 'q':
+                    self.calculate_and_exit()
+                    break
+                elif key == '\x03': # Ctrl+C
+                    break
+
+                # Safety Clamp
+                self.servo_val = max(0, min(180, self.servo_val))
+                
+                self.send_cmd(self.servo_val)
+                print(f"\rCurrent Servo PWM: {self.servo_val}   ", end="")
+                
+        except Exception as e:
+            print(e)
+        finally:
+            self.send_cmd(90) # Reset to safe center on exit
+            if self.serial:
+                self.serial.close()
+
+    def calculate_and_exit(self):
+        # Restore terminal settings for input()
+        # (termios/tty messed them up for get_key)
+        # We simply use print/input normally here as the loop is done.
+        
+        print("\n\n========================================")
+        print("       CALIBRATION DATA ENTRY")
+        print("========================================")
+        
+        try:
+            # 1. CENTER
+            print(f"1. Center PWM (Last position: {self.servo_val})")
+            c_input = input(f"   Enter Center PWM [default {self.servo_val}]: ")
+            val_center = int(c_input) if c_input else self.servo_val
+
+            # 2. LEFT LIMIT
+            print("\n2. Left Limit")
+            val_left = int(input("   Enter PWM used for MAX LEFT: "))
+            angle_left = float(input("   Enter Measured INNER Wheel Angle (deg): "))
+
+            # 3. RIGHT LIMIT
+            print("\n3. Right Limit")
+            val_right = int(input("   Enter PWM used for MAX RIGHT: "))
+            angle_right = float(input("   Enter Measured INNER Wheel Angle (deg): "))
+
+            # Calculations
+            # Ratio = Delta PWM / Angle
+            ratio_l = abs(val_left - val_center) / angle_left
+            ratio_r = abs(val_right - val_center) / angle_right
+            avg_ratio = (ratio_l + ratio_r) / 2.0
+            
+            offset = val_center - 90
+
+            self.get_logger().info("CALIBRATION COMPLETE")
+            print("\n****************************************")
+            print("   COPY THESE VALUES TO PYTHON DRIVER")
+            print("****************************************")
+            print(f"STEERING_RATIO = {avg_ratio:.2f}")
+            print(f"SERVO_OFFSET   = {offset}")
+            print(f"PWM_RANGE      = ({min(val_left, val_right)}, {max(val_left, val_right)})")
+            print("****************************************")
+
+        except ValueError:
+            self.get_logger().error("Invalid input. Please enter numbers only.")
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = ServoCalibrationNode()
+    
+    # We don't use rclpy.spin() because we have a blocking input loop
+    # The node handles its own loop in node.run()
+    node.run()
+
+    node.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
 --- File: ./src/car_hardware/car_hardware/game_control_cli.py ---
 #!/usr/bin/env python3
 import rclpy

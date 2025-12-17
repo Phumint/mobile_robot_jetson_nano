@@ -169,6 +169,8 @@
 │   │               ├── HEAD
 │   │               └── main
 │   ├── objects
+│   │   ├── 00
+│   │   │   └── ea06740bb56b874a2b91579b1ab3ae77f31000
 │   │   ├── 01
 │   │   │   └── e21a0a6130615f19a2a7438065513da7257d62
 │   │   ├── 05
@@ -187,7 +189,8 @@
 │   │   ├── 11
 │   │   │   └── e6b5035082480dbeb46abcd08e4e2335558745
 │   │   ├── 13
-│   │   │   └── 7d6a38bb95c11dfbfa633ece57c09ed8760caf
+│   │   │   ├── 7d6a38bb95c11dfbfa633ece57c09ed8760caf
+│   │   │   └── a75753c95f3c4293e3ed68fe12ea868af59233
 │   │   ├── 14
 │   │   │   └── 253db5d5378988b2b60257172c0f221b58d58c
 │   │   ├── 17
@@ -209,6 +212,7 @@
 │   │   ├── 24
 │   │   │   └── 8f4142698b844378cb5357eb6d0af1bbc42a0d
 │   │   ├── 25
+│   │   │   ├── 52cfa3c4d3b78bb618f1b697e9d229b73ca2eb
 │   │   │   └── f0d316b87c2bd8511e7b0e44f6e75c69dc66da
 │   │   ├── 26
 │   │   │   └── 2e86c8e0c168f25a1bdd678257e820e8b98285
@@ -227,7 +231,10 @@
 │   │   │   └── 4a80c10474c81d1672bc59a68b0c8163fc75db
 │   │   ├── 34
 │   │   │   └── ebeb7f52cc6666f9a35ecc1e82e0c917c113c3
+│   │   ├── 3b
+│   │   │   └── dd2d9f454d36228d10aeb6308b4b2aceac2cb9
 │   │   ├── 3c
+│   │   │   ├── 1e3c41540f063fe5c8b9d624c6bf4dc97e8b94
 │   │   │   └── 7446031de6101afbea6594500c543ee15fe468
 │   │   ├── 3f
 │   │   │   └── ce5d0494875cbdc400c285b282f3b7a6e1d16c
@@ -236,10 +243,16 @@
 │   │   │   └── dbce0a341de448dfdb01b728102d6f830a7ebe
 │   │   ├── 50
 │   │   │   └── b54a195f98e7fb43008eb378427489c06e8883
+│   │   ├── 52
+│   │   │   └── 83f9ab9842dda6539ef3232621d75cda2cb8a3
+│   │   ├── 57
+│   │   │   └── ae3e78994d64f71a88b6473b1fef5cbe96de6f
 │   │   ├── 5a
 │   │   │   └── 1b1bdc72766fda41dff8141db633b600426300
 │   │   ├── 5d
 │   │   │   └── 3a809484ed37f8ce5bf1532b8aa3ae255590ab
+│   │   ├── 5f
+│   │   │   └── 0f478ef10e8fda0c832751983c8278a08b781c
 │   │   ├── 60
 │   │   │   └── b903dec4efe338e8f763b7d4bb6ca33dc01a56
 │   │   ├── 62
@@ -302,6 +315,8 @@
 │   │   │   └── 96a00abb961cadb84694471a0f7544e88b9955
 │   │   ├── 92
 │   │   │   └── dddee4029292644283e0b03c92fd1451494e35
+│   │   ├── 95
+│   │   │   └── 5e94740c60da3582bd988d5b02f3c7b604a011
 │   │   ├── 96
 │   │   │   ├── 2ef7913f0f5c72735e52ce91870aee4b0cf8c4
 │   │   │   └── b8ab2f37626358c4c877be3f2bd6cf904cfa62
@@ -321,9 +336,12 @@
 │   │   ├── a3
 │   │   │   ├── 3ba79801135a1b80760603278883030aad2582
 │   │   │   └── b00b0b02b23663fc8c4352e40dfd3a324d1d01
+│   │   ├── a4
+│   │   │   └── 66ef8513a01bb9e26de4f49c5b2f7615f1ce2e
 │   │   ├── a7
 │   │   │   └── 1b5c2e08d7df552608c5da4d9a519d10a54268
 │   │   ├── a9
+│   │   │   ├── 0d7814dddf15423b0026fcf9025e66a57b898d
 │   │   │   ├── 2033dba41ce9d54427ef7c63ce8c6d689d1e13
 │   │   │   └── 7428b8d8f9e0e5c7279bc6405c3accf30002ad
 │   │   ├── ab
@@ -339,6 +357,7 @@
 │   │   │   ├── 8769ba8602a0dd38794b29bebf26c2b43fc0b7
 │   │   │   └── aba2c20e6bfade671bc3a644308ce4ce2a2fba
 │   │   ├── b7
+│   │   │   ├── 0a0742f6fbaa28c6e9c08622ba1766c156e136
 │   │   │   └── e43c0e2aa6a5f7e8081a1fb392a42372c88567
 │   │   ├── bb
 │   │   │   ├── 0e70231063ebedc94106a9b7d77aa3bb5af904
@@ -352,6 +371,8 @@
 │   │   ├── c3
 │   │   │   ├── 4cc62e60a73e0363cc4fbb40e3d62d8af6d97f
 │   │   │   └── 7cdb3dfdf3edc255f237fa129e42f9eecdc885
+│   │   ├── c4
+│   │   │   └── ffd19fa45d2ea741a5914a157a424a99c61dca
 │   │   ├── c5
 │   │   │   └── 6c4f0def3b37c8a6aaf79b3099acb6c32a7f20
 │   │   ├── c7
@@ -366,13 +387,17 @@
 │   │   ├── d3
 │   │   │   ├── 31f1e905dd7a8196e6463eea1714c715434225
 │   │   │   └── 3f3ba8fd8e8fd11bb268f0e7408065cd09bef0
+│   │   ├── d4
+│   │   │   └── 2236be5b983cb56f9dc7cd4b4487cf9c3df6b2
 │   │   ├── d9
 │   │   │   └── 8ae375cc984cca7af1aab972f159cc1214a4bc
 │   │   ├── dc
+│   │   │   ├── 01e26cd66897db5b2d3b32fe156c23f29b7143
 │   │   │   └── 0cc9962e808dc31de91fe2b3b1d1a57dea448c
 │   │   ├── de
 │   │   │   └── 6efb7b8388e051911bbf60597d26f41857bcb1
 │   │   ├── e0
+│   │   │   ├── 1e72a695622bf298e79ad1cb27ba41eb55fa73
 │   │   │   └── 44a6f0bf3446b62dcafcca855b9bdd58db6d22
 │   │   ├── e1
 │   │   │   ├── 0029ef74a689b3d57c1e143db99d6bd7a2e519
@@ -383,10 +408,16 @@
 │   │   ├── e7
 │   │   │   └── e1cfa443753b92b0e51b3be2074a03762ac742
 │   │   ├── e9
+│   │   │   ├── 4a642acbcaa6bc964a4c203dcee2e11b7f6f91
 │   │   │   ├── c045470736d7ce5d06270060f665cb172209d9
 │   │   │   └── fbcd9ca9166d03e076d5d27e63ad269bd41dad
+│   │   ├── ea
+│   │   │   ├── 2445bfa454b428a56776ade7862d13d8044161
+│   │   │   └── 6408b40c3d3f5e9d199a821d4e2238a4fceadd
 │   │   ├── eb
 │   │   │   └── 315a106ffbecf2e7e5541e750588e6d9998585
+│   │   ├── ed
+│   │   │   └── bd5e8e37682722272c19a1fdaebf4d93e56d55
 │   │   ├── ee
 │   │   │   ├── 107a79f1d6563c84f1936aeed156f4bcaf9706
 │   │   │   └── 6053b97a9163bc23f52ea9db0f2fd0cde4a29b
@@ -609,7 +640,7 @@
             ├── test_flake8.py
             └── test_pep257.py
 
-229 directories, 380 files
+240 directories, 400 files
 
 ==========================================
 
@@ -733,7 +764,7 @@ class ControllerNode(Node):
         steer_angle_deg = -float(self.pid.update(composite))
         
         # Slow down on turns
-        reduction = (1 - min(abs(steer_angle_deg)/20, 1) * 0.5)
+        reduction = (1 - min(abs(steer_angle_deg)/20, 1) * 0.2)
         target_speed_ms = (self.base_speed_ratio * self.max_speed_ms) * reduction
 
         msg = Twist()
@@ -843,21 +874,28 @@ class LaneDetectionNode(Node):
 
     def detect_lane_frame(self, frame):
         height, width = frame.shape[:2]
-        
-        # 1. Define ROI (Trapezoid) - ADJUST THESE IF CAMERA MOVES
-        roi_points = np.array([[(16, 475), (159, 241), (503, 237), (638, 444), (17, 477)]], dtype=np.int32)
+
+        # 1. Define ROI
+        # Order for polylines: bl -> tl -> tr -> br -> bl
+        bl = (199, 479)
+        tl = (275, 359)
+        tr = (404, 363)
+        br = (495, 479)
+        roi_points = np.array([[bl, tl, tr, br, bl]], dtype=np.int32)
 
         # 2. Perspective Transform (Bird's Eye View)
-        pts1 = np.float32([roi_points[0][3], roi_points[0][0], roi_points[0][2], roi_points[0][1]])
+        # Standard Mapping: [Top-Left, Bottom-Left, Top-Right, Bottom-Right]
+        pts1 = np.float32([tl, bl, tr, br])
         pts2 = np.float32([[0, 0], [0, height], [width, 0], [width, height]])
+        
         matrix = cv2.getPerspectiveTransform(pts1, pts2)
         warped = cv2.warpPerspective(frame, matrix, (width, height))
 
-        # 3. Color Mask (Blue Detection)
+        # 3. Color Mask (White Detection)
         hsv = cv2.cvtColor(warped, cv2.COLOR_BGR2HSV)
-        lower_blue = np.array([79, 0, 183])
-        upper_blue = np.array([122, 255, 255])
-        mask = cv2.inRange(hsv, lower_blue, upper_blue)
+        lower_white = np.array([79, 0, 183])
+        upper_white = np.array([179, 255, 255])
+        mask = cv2.inRange(hsv, lower_white, upper_white)
 
         # 4. Find Lines (Sliding Window)
         lx, rx = self.sliding_window_lane(mask)
@@ -866,7 +904,7 @@ class LaneDetectionNode(Node):
         debug_frame = frame.copy()
 
         # A. Draw the ROI Box (Yellow)
-        cv2.polylines(debug_frame, [roi_points], True, (0, 255, 255), 2)
+        cv2.polylines(debug_frame, [roi_points], True, (0, 255, 255), 1)
 
         # B. Draw the "Mask" (Picture-in-Picture)
         mask_bgr = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
@@ -875,7 +913,7 @@ class LaneDetectionNode(Node):
         cv2.rectangle(debug_frame, (0,0), (160,120), (255,255,255), 1)
 
         # --- LOGIC ---
-        lanes_missing = (len(lx) < 200 and len(rx) < 200)
+        lanes_missing = (len(lx) < 100 and len(rx) < 100)
 
         # T-Section Logic
         if lanes_missing and not self.t_section_active:

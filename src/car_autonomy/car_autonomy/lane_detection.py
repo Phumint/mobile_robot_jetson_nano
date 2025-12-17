@@ -105,7 +105,7 @@ class LaneDetectionNode(Node):
         # 3. Color Mask (White Detection)
         hsv = cv2.cvtColor(warped, cv2.COLOR_BGR2HSV)
         lower_white = np.array([79, 0, 183])
-        upper_white = np.array([122, 255, 255])
+        upper_white = np.array([179, 255, 255])
         mask = cv2.inRange(hsv, lower_white, upper_white)
 
         # 4. Find Lines (Sliding Window)

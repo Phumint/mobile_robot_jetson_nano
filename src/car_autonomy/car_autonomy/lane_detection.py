@@ -85,21 +85,28 @@ class LaneDetectionNode(Node):
 
     def detect_lane_frame(self, frame):
         height, width = frame.shape[:2]
-        
-        # 1. Define ROI (Trapezoid) - ADJUST THESE IF CAMERA MOVES
-        roi_points = np.array([[(16, 475), (159, 241), (503, 237), (638, 444), (17, 477)]], dtype=np.int32)
+
+        # 1. Define ROI
+        # Order for polylines: bl -> tl -> tr -> br -> bl
+        bl = (199, 479)
+        tl = (275, 359)
+        tr = (404, 363)
+        br = (495, 479)
+        roi_points = np.array([[bl, tl, tr, br, bl]], dtype=np.int32)
 
         # 2. Perspective Transform (Bird's Eye View)
-        pts1 = np.float32([roi_points[0][3], roi_points[0][0], roi_points[0][2], roi_points[0][1]])
+        # Standard Mapping: [Top-Left, Bottom-Left, Top-Right, Bottom-Right]
+        pts1 = np.float32([tl, bl, tr, br])
         pts2 = np.float32([[0, 0], [0, height], [width, 0], [width, height]])
+        
         matrix = cv2.getPerspectiveTransform(pts1, pts2)
         warped = cv2.warpPerspective(frame, matrix, (width, height))
 
-        # 3. Color Mask (Blue Detection)
+        # 3. Color Mask (White Detection)
         hsv = cv2.cvtColor(warped, cv2.COLOR_BGR2HSV)
-        lower_blue = np.array([79, 0, 183])
-        upper_blue = np.array([122, 255, 255])
-        mask = cv2.inRange(hsv, lower_blue, upper_blue)
+        lower_white = np.array([79, 0, 183])
+        upper_white = np.array([122, 255, 255])
+        mask = cv2.inRange(hsv, lower_white, upper_white)
 
         # 4. Find Lines (Sliding Window)
         lx, rx = self.sliding_window_lane(mask)
@@ -108,7 +115,7 @@ class LaneDetectionNode(Node):
         debug_frame = frame.copy()
 
         # A. Draw the ROI Box (Yellow)
-        cv2.polylines(debug_frame, [roi_points], True, (0, 255, 255), 2)
+        cv2.polylines(debug_frame, [roi_points], True, (0, 255, 255), 1)
 
         # B. Draw the "Mask" (Picture-in-Picture)
         mask_bgr = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
@@ -117,7 +124,7 @@ class LaneDetectionNode(Node):
         cv2.rectangle(debug_frame, (0,0), (160,120), (255,255,255), 1)
 
         # --- LOGIC ---
-        lanes_missing = (len(lx) < 200 and len(rx) < 200)
+        lanes_missing = (len(lx) < 100 and len(rx) < 100)
 
         # T-Section Logic
         if lanes_missing and not self.t_section_active:

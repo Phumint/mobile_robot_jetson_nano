@@ -49,7 +49,7 @@ class ControllerNode(Node):
         steer_angle_deg = -float(self.pid.update(composite))
         
         # Slow down on turns
-        reduction = (1 - min(abs(steer_angle_deg)/20, 1) * 0.5)
+        reduction = (1 - min(abs(steer_angle_deg)/20, 1) * 0.2)
         target_speed_ms = (self.base_speed_ratio * self.max_speed_ms) * reduction
 
         msg = Twist()

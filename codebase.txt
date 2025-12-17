@@ -184,6 +184,8 @@
 │   │   │   └── 1c7383382fc64a9fc729a161e7f1612fb60e71
 │   │   ├── 0e
 │   │   │   └── 1fe2075a854c87f029b506a3fd7a8fcfb50dbc
+│   │   ├── 11
+│   │   │   └── e6b5035082480dbeb46abcd08e4e2335558745
 │   │   ├── 13
 │   │   │   └── 7d6a38bb95c11dfbfa633ece57c09ed8760caf
 │   │   ├── 14
@@ -195,12 +197,15 @@
 │   │   ├── 1c
 │   │   │   └── c408ce58ed765e5788111d31fc4ebf3a6e2577
 │   │   ├── 1e
+│   │   │   ├── 0de79fc8cd1452c63fa735c2c6c03cdcc8ba31
 │   │   │   └── 1df454d52249826b4eef68d24409304cb55f15
 │   │   ├── 1f
 │   │   │   └── fdfe703ed41637c1b09cbecd7d41dc898c3835
 │   │   ├── 21
 │   │   │   ├── c8888b40a76ada10450158e59bc70d662d3a1d
 │   │   │   └── eb56933a649c09af4558791b6a3cebafe55c5c
+│   │   ├── 23
+│   │   │   └── 4aaa5d461821994792d73547400d6e3cb6b10f
 │   │   ├── 24
 │   │   │   └── 8f4142698b844378cb5357eb6d0af1bbc42a0d
 │   │   ├── 25
@@ -222,6 +227,8 @@
 │   │   │   └── 4a80c10474c81d1672bc59a68b0c8163fc75db
 │   │   ├── 34
 │   │   │   └── ebeb7f52cc6666f9a35ecc1e82e0c917c113c3
+│   │   ├── 3c
+│   │   │   └── 7446031de6101afbea6594500c543ee15fe468
 │   │   ├── 3f
 │   │   │   └── ce5d0494875cbdc400c285b282f3b7a6e1d16c
 │   │   ├── 4e
@@ -249,7 +256,8 @@
 │   │   ├── 67
 │   │   │   └── c46885e80b68c07b396ad0685ff745c73743c3
 │   │   ├── 69
-│   │   │   └── 9928e2ec513ccf11c2937014f424488f135f7f
+│   │   │   ├── 9928e2ec513ccf11c2937014f424488f135f7f
+│   │   │   └── a833c1bd50cae1955560914798565824d80a44
 │   │   ├── 6b
 │   │   │   └── 0d148ca8e221d8e7bb8328cb1b62b823cc6ae5
 │   │   ├── 6f
@@ -351,8 +359,13 @@
 │   │   ├── cd
 │   │   │   ├── 1d7c6b5f5df897687172eb4e9aeacaeed3abc3
 │   │   │   └── af34fd9f6e32e4f42553aeba9ef8cd026b2f0c
+│   │   ├── d1
+│   │   │   └── 169769e70d3b986c268c6fb34d200f55befd05
+│   │   ├── d2
+│   │   │   └── 4d04598dec8d4a0e2de920f6a0669e53d00f35
 │   │   ├── d3
-│   │   │   └── 31f1e905dd7a8196e6463eea1714c715434225
+│   │   │   ├── 31f1e905dd7a8196e6463eea1714c715434225
+│   │   │   └── 3f3ba8fd8e8fd11bb268f0e7408065cd09bef0
 │   │   ├── d9
 │   │   │   └── 8ae375cc984cca7af1aab972f159cc1214a4bc
 │   │   ├── dc
@@ -367,6 +380,8 @@
 │   │   │   └── d424048a11cfa453715055386d5bd0cfb75efd
 │   │   ├── e6
 │   │   │   └── 9de29bb2d1d6434b8b29ae775ad8c2e48c5391
+│   │   ├── e7
+│   │   │   └── e1cfa443753b92b0e51b3be2074a03762ac742
 │   │   ├── e9
 │   │   │   ├── c045470736d7ce5d06270060f665cb172209d9
 │   │   │   └── fbcd9ca9166d03e076d5d27e63ad269bd41dad
@@ -594,7 +609,7 @@
             ├── test_flake8.py
             └── test_pep257.py
 
-223 directories, 371 files
+229 directories, 380 files
 
 ==========================================
 
@@ -628,7 +643,7 @@ def generate_launch_description():
             executable='lane_detection',
             name='lane_detector',
             output='screen',
-            parameters=[{'record': False, 't_section_turn': 'left'}]
+            parameters=[{'record': True, 't_section_turn': 'left'}]
         ),
 
         # Start Lane Follower (Controller)
@@ -748,6 +763,7 @@ import cv2
 import numpy as np
 import threading
 import os
+import time
 
 class LaneDetectionNode(Node):
     def __init__(self):
@@ -757,6 +773,7 @@ class LaneDetectionNode(Node):
 
         # --- Parameters ---
         self.declare_parameter('record', True)
+        # We save to /workspace so it appears in your ~/phumint_ws folder on the Host
         self.declare_parameter('output_path', '/workspace/lane_output.avi')
         self.declare_parameter('t_section_turn', 'left') 
 
@@ -770,63 +787,94 @@ class LaneDetectionNode(Node):
         self.T_SECTION_TURN_FRAMES = 50 
         
         # --- Camera setup ---
-        # 1. Open Camera with V4L2 backend (More stable on Jetson)
+        # 1. Open Camera with V4L2 backend
         self.cap = cv2.VideoCapture(0)
 
-        # 2. FORCE MJPG Format
-        # Your v4l2-ctl output shows Index 0 is MJPG. We must request this.
+        # 2. FORCE MJPG Format (Critical for Jetson/Docker stability)
         self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
 
-        # 3. Set Resolution & FPS to match the supported mode
+        # 3. Set Resolution & FPS
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
         self.cap.set(cv2.CAP_PROP_FPS, 30)
 
         # 4. Verification
         if not self.cap.isOpened():
-             self.get_logger().warning("⚠️ Camera not opened (index 0).")
+             self.get_logger().error("⚠️ Camera not opened (index 0)!")
+        
         self.latest_frame = None
         self.lock = threading.Lock()
 
         # --- Video writer ---
         self.out = None
         if self.record:
-            os.makedirs(os.path.dirname(self.output_path), exist_ok=True)
-            fourcc = cv2.VideoWriter_fourcc(*'XVID')
-            self.out = cv2.VideoWriter(self.output_path, fourcc, 20.0, (640, 480))
+            try:
+                os.makedirs(os.path.dirname(self.output_path), exist_ok=True)
+                # Use MJPG codec for Docker compatibility (XVID often fails)
+                fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+                self.out = cv2.VideoWriter(self.output_path, fourcc, 20.0, (640, 480))
+                
+                if self.out.isOpened():
+                    self.get_logger().info(f"✅ Recording started: {self.output_path}")
+                else:
+                    self.get_logger().error(f"❌ Failed to open VideoWriter! Check permissions for {self.output_path}")
+            except Exception as e:
+                self.get_logger().error(f"❌ VideoWriter error: {str(e)}")
 
-        # --- Threading ---
-        threading.Thread(target=self._capture_frames, daemon=True).start()
+        # --- Threading (with Safe Shutdown Flag) ---
+        self.running = True
+        self.capture_thread = threading.Thread(target=self._capture_frames, daemon=True)
+        self.capture_thread.start()
+        
         self.timer = self.create_timer(0.05, self.timer_callback)
 
     def _capture_frames(self):
-        while True:
-            ret, frame = self.cap.read()
-            if ret:
-                frame = cv2.resize(frame, (640, 480))
-                with self.lock:
-                    self.latest_frame = frame
+        while self.running:
+            if self.cap.isOpened():
+                ret, frame = self.cap.read()
+                if ret:
+                    frame = cv2.resize(frame, (640, 480))
+                    with self.lock:
+                        self.latest_frame = frame
+                else:
+                    time.sleep(0.01)
+            else:
+                time.sleep(0.01)
 
     def detect_lane_frame(self, frame):
         height, width = frame.shape[:2]
-        #roi_points = np.array([[(0, height - 30), (width, height - 30), (width, int(height * 0.8)), (0, int(height * 0.8))]], dtype=np.int32)
+        
+        # 1. Define ROI (Trapezoid) - ADJUST THESE IF CAMERA MOVES
         roi_points = np.array([[(16, 475), (159, 241), (503, 237), (638, 444), (17, 477)]], dtype=np.int32)
 
-
-
-        # Perspective Transform
+        # 2. Perspective Transform (Bird's Eye View)
         pts1 = np.float32([roi_points[0][3], roi_points[0][0], roi_points[0][2], roi_points[0][1]])
         pts2 = np.float32([[0, 0], [0, height], [width, 0], [width, height]])
         matrix = cv2.getPerspectiveTransform(pts1, pts2)
         warped = cv2.warpPerspective(frame, matrix, (width, height))
 
-        # Color Mask (Blue)
+        # 3. Color Mask (Blue Detection)
         hsv = cv2.cvtColor(warped, cv2.COLOR_BGR2HSV)
         lower_blue = np.array([79, 0, 183])
         upper_blue = np.array([122, 255, 255])
         mask = cv2.inRange(hsv, lower_blue, upper_blue)
 
+        # 4. Find Lines (Sliding Window)
         lx, rx = self.sliding_window_lane(mask)
+        
+        # --- VISUALIZATION (Debug Overlay) ---
+        debug_frame = frame.copy()
+
+        # A. Draw the ROI Box (Yellow)
+        cv2.polylines(debug_frame, [roi_points], True, (0, 255, 255), 2)
+
+        # B. Draw the "Mask" (Picture-in-Picture)
+        mask_bgr = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
+        small_mask = cv2.resize(mask_bgr, (160, 120)) 
+        debug_frame[0:120, 0:160] = small_mask
+        cv2.rectangle(debug_frame, (0,0), (160,120), (255,255,255), 1)
+
+        # --- LOGIC ---
         lanes_missing = (len(lx) < 200 and len(rx) < 200)
 
         # T-Section Logic
@@ -835,17 +883,20 @@ class LaneDetectionNode(Node):
             self.t_section_frames = 0
             
         if self.t_section_active:
+            cv2.putText(debug_frame, "T-SECTION", (width//2 - 50, height//2), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 3)
             if self.t_section_frames < self.T_SECTION_TURN_FRAMES:
                 self.t_section_frames += 1
                 heading_rad = np.pi/4 if self.t_section_turn == 'right' else -np.pi/4
-                return 0.0, float(heading_rad), frame.copy()
+                return 0.0, float(heading_rad), debug_frame
             else:
                 self.t_section_active = False
 
         # Normal Lane Following
         if len(lx) < 20 and len(rx) < 20:
-             return 0.0, 0.0, frame.copy()
+             cv2.putText(debug_frame, "NO LANE", (width//2 - 50, height//2), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 3)
+             return 0.0, 0.0, debug_frame
 
+        # Calculate Heading
         left_fit = np.polyfit(np.arange(len(lx)), lx, 2) if len(lx) > 2 else None
         right_fit = np.polyfit(np.arange(len(rx)), rx, 2) if len(rx) > 2 else None
 
@@ -862,7 +913,11 @@ class LaneDetectionNode(Node):
         pixel_offset = lane_center - width / 2
         offset_norm = pixel_offset / (width / 2)
 
-        return float(offset_norm), float(heading_rad), frame.copy()
+        # C. Draw Steering Line (Red)
+        steer_x = int(width//2 + np.tan(heading_rad) * 100)
+        cv2.line(debug_frame, (width//2, height), (steer_x, height-100), (0, 0, 255), 3)
+
+        return float(offset_norm), float(heading_rad), debug_frame
 
     def sliding_window_lane(self, mask):
         histogram = np.sum(mask[mask.shape[0] // 2:, :], axis=0)
@@ -906,11 +961,23 @@ class LaneDetectionNode(Node):
             msg_heading = Float32()
             msg_heading.data = heading
             self.pub_heading.publish(msg_heading)
-            if self.record and self.out: self.out.write(visual)
+            
+            # Write visual frame to video
+            if self.record and self.out: 
+                self.out.write(visual)
 
     def cleanup(self):
+        self.get_logger().info("Stopping camera thread...")
+        self.running = False  # 1. Signal thread to stop
+        
+        # 2. Wait briefly for thread to finish
+        if hasattr(self, 'capture_thread'):
+            self.capture_thread.join(timeout=1.0)
+            
+        # 3. Release resources safely
         if self.cap: self.cap.release()
         if self.out: self.out.release()
+        self.get_logger().info("Resources released.")
 
 def main(args=None):
     rclpy.init(args=args)
@@ -923,7 +990,6 @@ def main(args=None):
         node.cleanup()
         node.destroy_node()
         rclpy.shutdown()
-
 --- File: ./src/car_autonomy/setup.py ---
 from setuptools import setup
 import os

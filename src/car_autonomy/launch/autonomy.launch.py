@@ -25,7 +25,7 @@ def generate_launch_description():
             executable='lane_detection',
             name='lane_detector',
             output='screen',
-            parameters=[{'record': False, 't_section_turn': 'left'}]
+            parameters=[{'record': True, 't_section_turn': 'left'}]
         ),
 
         # Start Lane Follower (Controller)

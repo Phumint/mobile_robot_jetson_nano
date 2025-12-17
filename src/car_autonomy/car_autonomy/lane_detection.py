@@ -66,7 +66,7 @@ class LaneDetectionNode(Node):
 
     def detect_lane_frame(self, frame):
         height, width = frame.shape[:2]
-        # roi_points = np.array([[(0, height - 30), (width, height - 30), (width, int(height * 0.8)), (0, int(height * 0.8))]], dtype=np.int32)
+        #roi_points = np.array([[(0, height - 30), (width, height - 30), (width, int(height * 0.8)), (0, int(height * 0.8))]], dtype=np.int32)
         roi_points = np.array([[(16, 475), (159, 241), (503, 237), (638, 444), (17, 477)]], dtype=np.int32)
 
 

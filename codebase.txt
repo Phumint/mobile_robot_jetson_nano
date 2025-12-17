@@ -173,10 +173,15 @@
 │   │   │   └── ea06740bb56b874a2b91579b1ab3ae77f31000
 │   │   ├── 01
 │   │   │   └── e21a0a6130615f19a2a7438065513da7257d62
+│   │   ├── 04
+│   │   │   └── 2e8962fffa2355c421ad1fed6a3cdafa4ab5df
 │   │   ├── 05
 │   │   │   └── 93516dfd300216bc37ef160c0898fe744d6ce7
 │   │   ├── 06
-│   │   │   └── 494a0c5586948d014d2ed645aa85cd3015359c
+│   │   │   ├── 494a0c5586948d014d2ed645aa85cd3015359c
+│   │   │   └── 6d0e60fabf55c0766877d6e94c93df14c2e011
+│   │   ├── 07
+│   │   │   └── b22b52d30db6ccaabbf778a7808d39bb490781
 │   │   ├── 0a
 │   │   │   ├── 28d630906fca8da875aea77af34d9cbf42640b
 │   │   │   └── 296f14b3d8f2cfcd8d0be0dd4b77c3d0fa4145
@@ -193,11 +198,15 @@
 │   │   │   └── a75753c95f3c4293e3ed68fe12ea868af59233
 │   │   ├── 14
 │   │   │   └── 253db5d5378988b2b60257172c0f221b58d58c
+│   │   ├── 16
+│   │   │   └── 9ea2bc8e3238691c8dfcf6c72781400913e1ed
 │   │   ├── 17
 │   │   │   └── 7f42ab3b94e7a53c3e721d719a4e1ea897789e
 │   │   ├── 19
+│   │   │   ├── 8f59d7dab9f9ee602d589a3c01413a631b2cc1
 │   │   │   └── db1622f6b901b2f7c166e3795822d6522d5c27
 │   │   ├── 1c
+│   │   │   ├── 4d3c27fdf7aa7ca70a632a5f61ab9f11c51099
 │   │   │   └── c408ce58ed765e5788111d31fc4ebf3a6e2577
 │   │   ├── 1e
 │   │   │   ├── 0de79fc8cd1452c63fa735c2c6c03cdcc8ba31
@@ -207,6 +216,8 @@
 │   │   ├── 21
 │   │   │   ├── c8888b40a76ada10450158e59bc70d662d3a1d
 │   │   │   └── eb56933a649c09af4558791b6a3cebafe55c5c
+│   │   ├── 22
+│   │   │   └── 8fba3b2b7e1647c6a7a43715fab579f74ddfda
 │   │   ├── 23
 │   │   │   └── 4aaa5d461821994792d73547400d6e3cb6b10f
 │   │   ├── 24
@@ -223,6 +234,8 @@
 │   │   │   └── 1338e48da3cdbca17efd5ca385e3f5e087c6dc
 │   │   ├── 29
 │   │   │   └── ea02eb44a1169299936b36944e22d4d18c58dc
+│   │   ├── 2a
+│   │   │   └── 1854c26d6be2fa1ed6fc436961fb7e2aaddcdb
 │   │   ├── 2d
 │   │   │   └── 8001a0c3e704b6e17103993c565e9a51749e5a
 │   │   ├── 2f
@@ -238,23 +251,35 @@
 │   │   │   └── 7446031de6101afbea6594500c543ee15fe468
 │   │   ├── 3f
 │   │   │   └── ce5d0494875cbdc400c285b282f3b7a6e1d16c
+│   │   ├── 4d
+│   │   │   └── ca498c51529e48770924f46889a6a3bfe48a9d
 │   │   ├── 4e
 │   │   │   ├── 2e6a4fb47dde9e23f4939f67022d551af2cf58
 │   │   │   └── dbce0a341de448dfdb01b728102d6f830a7ebe
+│   │   ├── 4f
+│   │   │   └── 70c98dae616bb75891437c6ffafaa654a28140
 │   │   ├── 50
-│   │   │   └── b54a195f98e7fb43008eb378427489c06e8883
+│   │   │   ├── b54a195f98e7fb43008eb378427489c06e8883
+│   │   │   └── c6bea66e7fb4648302660b58269b729dc1741a
 │   │   ├── 52
 │   │   │   └── 83f9ab9842dda6539ef3232621d75cda2cb8a3
+│   │   ├── 53
+│   │   │   └── 21dc97af69bb20afbc85c2016449433fd2a44d
 │   │   ├── 57
 │   │   │   └── ae3e78994d64f71a88b6473b1fef5cbe96de6f
 │   │   ├── 5a
 │   │   │   └── 1b1bdc72766fda41dff8141db633b600426300
 │   │   ├── 5d
 │   │   │   └── 3a809484ed37f8ce5bf1532b8aa3ae255590ab
+│   │   ├── 5e
+│   │   │   ├── 31dbb74535c49fd05d56d73dcd2f73a6168616
+│   │   │   └── 8d7144b63759d00154c758e57d54bc32326d37
 │   │   ├── 5f
 │   │   │   └── 0f478ef10e8fda0c832751983c8278a08b781c
 │   │   ├── 60
 │   │   │   └── b903dec4efe338e8f763b7d4bb6ca33dc01a56
+│   │   ├── 61
+│   │   │   └── f9c76696068d47acbbcba77a6ce4375c68872f
 │   │   ├── 62
 │   │   │   └── 9eea032be0638e04bad9de5a56d463c95265b3
 │   │   ├── 63
@@ -271,6 +296,8 @@
 │   │   ├── 69
 │   │   │   ├── 9928e2ec513ccf11c2937014f424488f135f7f
 │   │   │   └── a833c1bd50cae1955560914798565824d80a44
+│   │   ├── 6a
+│   │   │   └── 10686465df5beb726136621f4b5a22a190a377
 │   │   ├── 6b
 │   │   │   └── 0d148ca8e221d8e7bb8328cb1b62b823cc6ae5
 │   │   ├── 6f
@@ -288,7 +315,8 @@
 │   │   │   ├── 53735af580fae97fd4b55d3f5e9b6aa1dda353
 │   │   │   └── 6ca239ef6f5533c4f7ab6374d8402c1d724533
 │   │   ├── 7c
-│   │   │   └── 45e68487ca246057074912a0ca7888c383b6a2
+│   │   │   ├── 45e68487ca246057074912a0ca7888c383b6a2
+│   │   │   └── 8c2601d846048e7e4b24d20c82a43b0b292aff
 │   │   ├── 7d
 │   │   │   └── 11704c363db43f3b7a8ec41b16b4f1fc56b8eb
 │   │   ├── 7e
@@ -312,6 +340,7 @@
 │   │   ├── 90
 │   │   │   └── 2c5dde7b954a26dfc1e9777e59b47b22f7ab5b
 │   │   ├── 91
+│   │   │   ├── 2219ca8bc301965f8d9ace9a11b81effc05ada
 │   │   │   └── 96a00abb961cadb84694471a0f7544e88b9955
 │   │   ├── 92
 │   │   │   └── dddee4029292644283e0b03c92fd1451494e35
@@ -327,8 +356,12 @@
 │   │   ├── 99
 │   │   │   ├── 367b3dd9fe87ac0a1e2fd9c78d0b0f348de18e
 │   │   │   └── f13cc9a1801f2be598d3f127515bb4411018c6
+│   │   ├── 9b
+│   │   │   └── 36083a645a2e24ecc7e56b5d67673b8d79d32a
 │   │   ├── 9c
 │   │   │   └── 92f56727d1aff20d4f3bdfac97bac31da2c39e
+│   │   ├── 9f
+│   │   │   └── 5d6f0e156b18ffed851ef93dcf9c7142a4498d
 │   │   ├── a0
 │   │   │   └── 445564c88e8dbe624d9a91ab04eb32dd0eb68f
 │   │   ├── a1
@@ -337,6 +370,7 @@
 │   │   │   ├── 3ba79801135a1b80760603278883030aad2582
 │   │   │   └── b00b0b02b23663fc8c4352e40dfd3a324d1d01
 │   │   ├── a4
+│   │   │   ├── 16dad58bacf1ecfaa659f02ecdc1b41725b1aa
 │   │   │   └── 66ef8513a01bb9e26de4f49c5b2f7615f1ce2e
 │   │   ├── a7
 │   │   │   └── 1b5c2e08d7df552608c5da4d9a519d10a54268
@@ -359,6 +393,8 @@
 │   │   ├── b7
 │   │   │   ├── 0a0742f6fbaa28c6e9c08622ba1766c156e136
 │   │   │   └── e43c0e2aa6a5f7e8081a1fb392a42372c88567
+│   │   ├── b9
+│   │   │   └── 384377327ed9df4a5d00138e273b822bb8f32c
 │   │   ├── bb
 │   │   │   ├── 0e70231063ebedc94106a9b7d77aa3bb5af904
 │   │   │   └── 893edf573d8e586ff40d633a94e320c8f573ae
@@ -367,6 +403,7 @@
 │   │   │   ├── 6e63a1c4618974c78368681ff2c74ab33ff284
 │   │   │   └── d9b4cfcd920abcc7a5478433dceb613ecbc57e
 │   │   ├── bf
+│   │   │   ├── 381d666cfa008e851b16addbabebbaeedf0f3a
 │   │   │   └── 60e2a2b9f62d882970b359e48104802e0e4fcb
 │   │   ├── c3
 │   │   │   ├── 4cc62e60a73e0363cc4fbb40e3d62d8af6d97f
@@ -415,7 +452,8 @@
 │   │   │   ├── 2445bfa454b428a56776ade7862d13d8044161
 │   │   │   └── 6408b40c3d3f5e9d199a821d4e2238a4fceadd
 │   │   ├── eb
-│   │   │   └── 315a106ffbecf2e7e5541e750588e6d9998585
+│   │   │   ├── 315a106ffbecf2e7e5541e750588e6d9998585
+│   │   │   └── 340870b0d4a14b2e05be7f7c42e9e8635579c7
 │   │   ├── ed
 │   │   │   └── bd5e8e37682722272c19a1fdaebf4d93e56d55
 │   │   ├── ee
@@ -430,7 +468,10 @@
 │   │   ├── f4
 │   │   │   └── 225db7828742b5e7d12aedb8658df60af399bf
 │   │   ├── f5
-│   │   │   └── 2ba7be902ad82d9b0432eceb4e6338e15e33c0
+│   │   │   ├── 2ba7be902ad82d9b0432eceb4e6338e15e33c0
+│   │   │   └── f869d3a17ee86142674c07e1abf1276fa1a1f3
+│   │   ├── f7
+│   │   │   └── f8c3cbae5bd1d5eb64e909e95ba6e1a71f2db2
 │   │   ├── f9
 │   │   │   └── 57c1c9d85b54b93137524780ab3d3bc3364819
 │   │   ├── fa
@@ -438,6 +479,12 @@
 │   │   │   └── e6baf6ab8cf9b62de8285eeea7192addc4dfa0
 │   │   ├── fb
 │   │   │   └── 7ff4179e651276b8fd84e2d453fa2b3d25a287
+│   │   ├── fc
+│   │   │   └── 7d7f5fb5f20af972f8f0a8e5fe73d40a173e19
+│   │   ├── fd
+│   │   │   └── e64aef4bfea533dbda28e4da07218b9734ddf7
+│   │   ├── fe
+│   │   │   └── 7166a80b26c83df8887b9fa374421af9b10eb9
 │   │   ├── ff
 │   │   │   └── 7f48d3c784565b4fd68cd4ca104782e8698a98
 │   │   ├── info
@@ -640,7 +687,7 @@
             ├── test_flake8.py
             └── test_pep257.py
 
-240 directories, 400 files
+258 directories, 429 files
 
 ==========================================
 
@@ -720,57 +767,77 @@ from std_msgs.msg import Float32
 from geometry_msgs.msg import Twist
 
 class PID:
-    def __init__(self, Kp, Ki, Kd, output_limits=(-20, 20)):
+    def __init__(self, Kp, Ki, Kd, limits=(-25, 25)):
         self.Kp = Kp
         self.Ki = Ki
         self.Kd = Kd
-        self.min_out = output_limits[0]
-        self.max_out = output_limits[1]
-        self.prev_error = 0.0
+        self.min_out, self.max_out = limits
         self.integral = 0.0
+        self.prev_error = 0.0
 
     def update(self, error):
-        p_out = self.Kp * error
         self.integral += error
-        i_out = self.Ki * self.integral
         derivative = error - self.prev_error
-        d_out = self.Kd * derivative
         self.prev_error = error
-        output = p_out + i_out + d_out
+        output = (
+            self.Kp * error +
+            self.Ki * self.integral +
+            self.Kd * derivative
+        )
         return max(self.min_out, min(self.max_out, output))
 
 class ControllerNode(Node):
     def __init__(self):
-        super().__init__('controller_node')
-        self.declare_parameter('max_speed_ms', 0.2)
-        self.max_speed_ms = self.get_parameter('max_speed_ms').value
-        self.lane_offset_value = 0.0
-        self.lane_heading_value = 0.0
+        super().__init__('lane_controller')
 
-        self.lane_offset = self.create_subscription(Float32, 'lane_offset', self.offset_callback, 10)
-        self.lane_heading = self.create_subscription(Float32, 'lane_heading', self.heading_callback, 10)
-        
-        # Publishes cmd_vel for the STM32 driver
+        self.declare_parameter('max_speed', 0.25)
+        self.max_speed = self.get_parameter('max_speed').value
+
+        self.offset = 0.0
+        self.heading = 0.0
+        self.prev_steer = 0.0
+
+        self.create_subscription(Float32, 'lane_offset', self.offset_cb, 10)
+        self.create_subscription(Float32, 'lane_heading', self.heading_cb, 10)
         self.pub_cmd = self.create_publisher(Twist, 'cmd_vel', 10)
-        self.pid = PID(Kp=6.0, Ki=0.0, Kd=0.2, output_limits=(-25, 25))
-        self.base_speed_ratio = 1.0 
-        self.timer = self.create_timer(0.1, self.control_loop) 
 
-    def offset_callback(self, msg): self.lane_offset_value = msg.data
-    def heading_callback(self, msg): self.lane_heading_value = msg.data
+        self.pid = PID(Kp=7.0, Ki=0.0, Kd=0.3)
+        self.timer = self.create_timer(0.03, self.control_loop)
+
+    def offset_cb(self, msg): self.offset = msg.data
+    def heading_cb(self, msg): self.heading = msg.data
 
     def control_loop(self):
-        composite = float((20 * self.lane_offset_value * 0.8) + (20 * self.lane_heading_value * 0.2))
-        steer_angle_deg = -float(self.pid.update(composite))
-        
-        # Slow down on turns
-        reduction = (1 - min(abs(steer_angle_deg)/20, 1) * 0.2)
-        target_speed_ms = (self.base_speed_ratio * self.max_speed_ms) * reduction
-
         msg = Twist()
-        msg.linear.x = float(target_speed_ms)
-        # Convert degrees to radians for the driver
-        msg.angular.z = float(math.radians(steer_angle_deg))
+
+        # --- T-SECTION OVERRIDE ---
+        if abs(self.heading) > 0.6:
+            steer = math.copysign(1.0, self.heading)
+            msg.linear.x = 0.15
+            msg.angular.z = steer
+            self.pub_cmd.publish(msg)
+            return
+
+        # --- NORMAL LANE FOLLOWING ---
+        error = (15 * self.offset) + (25 * self.heading)
+        steer_deg = -self.pid.update(error)
+
+        # Scale to teleop range
+        steer_cmd = steer_deg * 0.03
+
+        # Deadband compensation
+        if abs(steer_cmd) < 0.15:
+            steer_cmd = 0.15 * math.copysign(1, steer_cmd)
+
+        # Smooth steering
+        steer_cmd = -1* 0.7 * self.prev_steer + 0.3 * steer_cmd
+        self.prev_steer = steer_cmd
+
+        speed = self.max_speed * (1 - min(abs(steer_cmd), 1.0) * 0.3)
+
+        msg.linear.x = float(speed)
+        msg.angular.z = float(steer_cmd)
+
         self.pub_cmd.publish(msg)
 
 def main(args=None):
@@ -778,9 +845,8 @@ def main(args=None):
     node = ControllerNode()
     try:
         rclpy.spin(node)
-    except KeyboardInterrupt:
-        node.pub_cmd.publish(Twist()) # Stop
     finally:
+        node.pub_cmd.publish(Twist())
         node.destroy_node()
         rclpy.shutdown()
 
@@ -796,238 +862,212 @@ import threading
 import os
 import time
 
+
 class LaneDetectionNode(Node):
     def __init__(self):
         super().__init__('lane_detection_node')
+
+        # ---------------- ROS ----------------
         self.pub_offset = self.create_publisher(Float32, 'lane_offset', 10)
         self.pub_heading = self.create_publisher(Float32, 'lane_heading', 10)
 
-        # --- Parameters ---
         self.declare_parameter('record', True)
-        # We save to /workspace so it appears in your ~/phumint_ws folder on the Host
         self.declare_parameter('output_path', '/workspace/lane_output.avi')
-        self.declare_parameter('t_section_turn', 'left') 
 
-        self.record = self.get_parameter('record').get_parameter_value().bool_value
-        self.output_path = self.get_parameter('output_path').get_parameter_value().string_value
-        self.t_section_turn = self.get_parameter('t_section_turn').get_parameter_value().string_value.lower()
-        
-        # --- T-section State ---
-        self.t_section_active = False
-        self.t_section_frames = 0
-        self.T_SECTION_TURN_FRAMES = 50 
-        
-        # --- Camera setup ---
-        # 1. Open Camera with V4L2 backend
+        self.record = self.get_parameter('record').value
+        self.output_path = self.get_parameter('output_path').value
+
+        # ---------------- Camera ----------------
         self.cap = cv2.VideoCapture(0)
-
-        # 2. FORCE MJPG Format (Critical for Jetson/Docker stability)
-        self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
-
-        # 3. Set Resolution & FPS
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
         self.cap.set(cv2.CAP_PROP_FPS, 30)
 
-        # 4. Verification
         if not self.cap.isOpened():
-             self.get_logger().error("⚠️ Camera not opened (index 0)!")
-        
+            self.get_logger().error("Camera not opened")
+
         self.latest_frame = None
         self.lock = threading.Lock()
+        self.running = True
 
-        # --- Video writer ---
+        self.capture_thread = threading.Thread(
+            target=self._capture_frames, daemon=True
+        )
+        self.capture_thread.start()
+
+        # ---------------- Video writer ----------------
         self.out = None
         if self.record:
-            try:
-                os.makedirs(os.path.dirname(self.output_path), exist_ok=True)
-                # Use MJPG codec for Docker compatibility (XVID often fails)
-                fourcc = cv2.VideoWriter_fourcc(*'MJPG')
-                self.out = cv2.VideoWriter(self.output_path, fourcc, 20.0, (640, 480))
-                
-                if self.out.isOpened():
-                    self.get_logger().info(f"✅ Recording started: {self.output_path}")
-                else:
-                    self.get_logger().error(f"❌ Failed to open VideoWriter! Check permissions for {self.output_path}")
-            except Exception as e:
-                self.get_logger().error(f"❌ VideoWriter error: {str(e)}")
+            os.makedirs(os.path.dirname(self.output_path), exist_ok=True)
+            self.out = cv2.VideoWriter(
+                self.output_path,
+                cv2.VideoWriter_fourcc(*'MJPG'),
+                20.0,
+                (640, 480)
+            )
 
-        # --- Threading (with Safe Shutdown Flag) ---
-        self.running = True
-        self.capture_thread = threading.Thread(target=self._capture_frames, daemon=True)
-        self.capture_thread.start()
-        
+        # ---------------- POLYGON ROI (YOUR ROI) ----------------
+        self.roi_pts = np.array([
+            [30, 477],   # bottom-left
+            [115, 247],  # top-left
+            [520, 255],  # top-right
+            [638, 473]   # bottom-right
+        ], dtype=np.int32)
+
+        # ---------------- Perspective Transform ----------------
+        self.dst_pts = np.float32([
+            [0, 480],
+            [0, 0],
+            [640, 0],
+            [640, 480]
+        ])
+
+        self.M = cv2.getPerspectiveTransform(
+            self.roi_pts.astype(np.float32),
+            self.dst_pts
+        )
+
+        # ---------------- Filtering ----------------
+        self.prev_offset = 0.0
+        self.prev_heading = 0.0
+        self.alpha = 0.7
+
         self.timer = self.create_timer(0.05, self.timer_callback)
 
+    # ======================================================
+    # Frame capture thread
+    # ======================================================
     def _capture_frames(self):
         while self.running:
-            if self.cap.isOpened():
-                ret, frame = self.cap.read()
-                if ret:
-                    frame = cv2.resize(frame, (640, 480))
-                    with self.lock:
-                        self.latest_frame = frame
-                else:
-                    time.sleep(0.01)
+            ret, frame = self.cap.read()
+            if ret:
+                with self.lock:
+                    self.latest_frame = cv2.resize(frame, (640, 480))
             else:
                 time.sleep(0.01)
 
-    def detect_lane_frame(self, frame):
-        height, width = frame.shape[:2]
+    # ======================================================
+    # Apply polygon ROI
+    # ======================================================
+    def apply_polygon_roi(self, frame):
+        mask = np.zeros(frame.shape[:2], dtype=np.uint8)
+        cv2.fillPoly(mask, [self.roi_pts], 255)
+        roi = cv2.bitwise_and(frame, frame, mask=mask)
+        return roi, mask
 
-        # 1. Define ROI
-        # Order for polylines: bl -> tl -> tr -> br -> bl
-        bl = (199, 479)
-        tl = (275, 359)
-        tr = (404, 363)
-        br = (495, 479)
-        roi_points = np.array([[bl, tl, tr, br, bl]], dtype=np.int32)
-
-        # 2. Perspective Transform (Bird's Eye View)
-        # Standard Mapping: [Top-Left, Bottom-Left, Top-Right, Bottom-Right]
-        pts1 = np.float32([tl, bl, tr, br])
-        pts2 = np.float32([[0, 0], [0, height], [width, 0], [width, height]])
-        
-        matrix = cv2.getPerspectiveTransform(pts1, pts2)
-        warped = cv2.warpPerspective(frame, matrix, (width, height))
-
-        # 3. Color Mask (White Detection)
-        hsv = cv2.cvtColor(warped, cv2.COLOR_BGR2HSV)
-        lower_white = np.array([79, 0, 183])
-        upper_white = np.array([179, 255, 255])
-        mask = cv2.inRange(hsv, lower_white, upper_white)
-
-        # 4. Find Lines (Sliding Window)
-        lx, rx = self.sliding_window_lane(mask)
-        
-        # --- VISUALIZATION (Debug Overlay) ---
-        debug_frame = frame.copy()
-
-        # A. Draw the ROI Box (Yellow)
-        cv2.polylines(debug_frame, [roi_points], True, (0, 255, 255), 1)
-
-        # B. Draw the "Mask" (Picture-in-Picture)
-        mask_bgr = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
-        small_mask = cv2.resize(mask_bgr, (160, 120)) 
-        debug_frame[0:120, 0:160] = small_mask
-        cv2.rectangle(debug_frame, (0,0), (160,120), (255,255,255), 1)
-
-        # --- LOGIC ---
-        lanes_missing = (len(lx) < 100 and len(rx) < 100)
-
-        # T-Section Logic
-        if lanes_missing and not self.t_section_active:
-            self.t_section_active = True
-            self.t_section_frames = 0
-            
-        if self.t_section_active:
-            cv2.putText(debug_frame, "T-SECTION", (width//2 - 50, height//2), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 3)
-            if self.t_section_frames < self.T_SECTION_TURN_FRAMES:
-                self.t_section_frames += 1
-                heading_rad = np.pi/4 if self.t_section_turn == 'right' else -np.pi/4
-                return 0.0, float(heading_rad), debug_frame
-            else:
-                self.t_section_active = False
-
-        # Normal Lane Following
-        if len(lx) < 20 and len(rx) < 20:
-             cv2.putText(debug_frame, "NO LANE", (width//2 - 50, height//2), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 3)
-             return 0.0, 0.0, debug_frame
-
-        # Calculate Heading
-        left_fit = np.polyfit(np.arange(len(lx)), lx, 2) if len(lx) > 2 else None
-        right_fit = np.polyfit(np.arange(len(rx)), rx, 2) if len(rx) > 2 else None
-
-        y_eval = height * 0.9
-        heading_rad = 0.0
-        
-        if left_fit is not None and right_fit is not None:
-            left_slope = 2 * left_fit[0] * y_eval + left_fit[1]
-            right_slope = 2 * right_fit[0] * y_eval + right_fit[1]
-            lane_slope = (left_slope + right_slope) / 2.0
-            heading_rad = float(np.arctan(lane_slope))
-
-        lane_center = (np.mean(lx) + np.mean(rx)) / 2
-        pixel_offset = lane_center - width / 2
-        offset_norm = pixel_offset / (width / 2)
-
-        # C. Draw Steering Line (Red)
-        steer_x = int(width//2 + np.tan(heading_rad) * 100)
-        cv2.line(debug_frame, (width//2, height), (steer_x, height-100), (0, 0, 255), 3)
-
-        return float(offset_norm), float(heading_rad), debug_frame
-
-    def sliding_window_lane(self, mask):
-        histogram = np.sum(mask[mask.shape[0] // 2:, :], axis=0)
+    # ======================================================
+    # Simple lane base detection
+    # ======================================================
+    def find_lane_centers(self, binary):
+        histogram = np.sum(binary[binary.shape[0] // 2:], axis=0)
         midpoint = histogram.shape[0] // 2
-        left_base = np.argmax(histogram[:midpoint])
-        right_base = np.argmax(histogram[midpoint:]) + midpoint
-        
-        n_windows = 12
-        window_height = mask.shape[0] // n_windows
-        nonzero = mask.nonzero()
-        nonzeroy, nonzerox = np.array(nonzero[0]), np.array(nonzero[1])
-        margin, minpix = 50, 50
-        lx, rx = [], []
-        l_current, r_current = left_base, right_base
 
-        for window in range(n_windows):
-            win_y_low = mask.shape[0] - (window + 1) * window_height
-            win_y_high = mask.shape[0] - window * window_height
-            win_xleft_low, win_xleft_high = l_current - margin, l_current + margin
-            win_xright_low, win_xright_high = r_current - margin, r_current + margin
+        left_x = np.argmax(histogram[:midpoint])
+        right_x = np.argmax(histogram[midpoint:]) + midpoint
 
-            good_left = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) & (nonzerox >= win_xleft_low) & (nonzerox < win_xleft_high)).nonzero()[0]
-            good_right = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) & (nonzerox >= win_xright_low) & (nonzerox < win_xright_high)).nonzero()[0]
+        return left_x, right_x
 
-            if len(good_left) > minpix: l_current = int(np.mean(nonzerox[good_left]))
-            if len(good_right) > minpix: r_current = int(np.mean(nonzerox[good_right]))
+    # ======================================================
+    # Lane detection pipeline
+    # ======================================================
+    def detect_lane_frame(self, frame):
+        h, w = frame.shape[:2]
 
-            lx.extend(nonzerox[good_left])
-            rx.extend(nonzerox[good_right])
+        # --- ROI ---
+        roi_frame, roi_mask = self.apply_polygon_roi(frame)
 
-        return np.array(lx), np.array(rx)
+        debug = frame.copy()
+        cv2.polylines(debug, [self.roi_pts], True, (0, 255, 255), 2)
 
+        # --- Perspective transform ---
+        bird = cv2.warpPerspective(roi_frame, self.M, (w, h))
+
+        # --- Color threshold (white lanes) ---
+        hsv = cv2.cvtColor(bird, cv2.COLOR_BGR2HSV)
+        lower_white = np.array([0, 0, 180])
+        upper_white = np.array([180, 60, 255])
+        lane_mask = cv2.inRange(hsv, lower_white, upper_white)
+
+        # --- Overlay lane mask for visualization ---
+        lane_overlay = bird.copy()
+        lane_overlay[lane_mask > 0] = (0, 255, 0)
+
+        # --- Lane center estimation ---
+        left_x, right_x = self.find_lane_centers(lane_mask)
+        lane_center = (left_x + right_x) / 2.0
+
+        # --- Offset ---
+        pixel_offset = lane_center - (w / 2)
+        offset_norm = pixel_offset / (w / 2)
+
+        # --- Heading (very rough) ---
+        lane_width_px = right_x - left_x
+        heading = np.arctan2((right_x - left_x), lane_width_px + 1e-6)
+
+        # --- Low-pass filter ---
+        offset_norm = self.alpha * self.prev_offset + (1 - self.alpha) * offset_norm
+        heading = self.alpha * self.prev_heading + (1 - self.alpha) * heading
+        self.prev_offset = offset_norm
+        self.prev_heading = heading
+
+        # --- Draw steering direction ---
+        steer_x = int(w / 2 + offset_norm * (w / 2))
+        cv2.line(debug, (w // 2, h), (steer_x, h - 120), (0, 0, 255), 3)
+
+        # --- Compose debug view ---
+        top = np.hstack((debug, lane_overlay))
+        bottom = np.hstack((
+            cv2.cvtColor(roi_mask, cv2.COLOR_GRAY2BGR),
+            cv2.cvtColor(lane_mask, cv2.COLOR_GRAY2BGR)
+        ))
+        vis = np.vstack((top, bottom))
+
+        return offset_norm, heading, vis
+
+    # ======================================================
+    # ROS timer
+    # ======================================================
     def timer_callback(self):
         with self.lock:
             frame = self.latest_frame
-        if frame is not None:
-            offset, heading, visual = self.detect_lane_frame(frame)
-            msg_offset = Float32()
-            msg_offset.data = offset
-            self.pub_offset.publish(msg_offset)
-            msg_heading = Float32()
-            msg_heading.data = heading
-            self.pub_heading.publish(msg_heading)
-            
-            # Write visual frame to video
-            if self.record and self.out: 
-                self.out.write(visual)
 
+        if frame is None:
+            return
+
+        offset, heading, vis = self.detect_lane_frame(frame)
+
+        self.pub_offset.publish(Float32(data=float(offset)))
+        self.pub_heading.publish(Float32(data=float(heading)))
+
+        if self.record and self.out:
+            vis_resized = cv2.resize(vis, (640, 480))
+            self.out.write(vis_resized)
+
+    # ======================================================
+    # Cleanup
+    # ======================================================
     def cleanup(self):
-        self.get_logger().info("Stopping camera thread...")
-        self.running = False  # 1. Signal thread to stop
-        
-        # 2. Wait briefly for thread to finish
-        if hasattr(self, 'capture_thread'):
-            self.capture_thread.join(timeout=1.0)
-            
-        # 3. Release resources safely
-        if self.cap: self.cap.release()
-        if self.out: self.out.release()
-        self.get_logger().info("Resources released.")
+        self.running = False
+        self.capture_thread.join(timeout=1.0)
+        self.cap.release()
+        if self.out:
+            self.out.release()
+
 
 def main(args=None):
     rclpy.init(args=args)
     node = LaneDetectionNode()
     try:
         rclpy.spin(node)
-    except KeyboardInterrupt:
-        pass
     finally:
         node.cleanup()
         node.destroy_node()
         rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()
+
 --- File: ./src/car_autonomy/setup.py ---
 from setuptools import setup
 import os

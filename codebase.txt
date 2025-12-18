@@ -176,7 +176,8 @@
 │   │   ├── 04
 │   │   │   └── 2e8962fffa2355c421ad1fed6a3cdafa4ab5df
 │   │   ├── 05
-│   │   │   └── 93516dfd300216bc37ef160c0898fe744d6ce7
+│   │   │   ├── 93516dfd300216bc37ef160c0898fe744d6ce7
+│   │   │   └── c23c79dbb59e62c72617f0e2f46bd6dc8ffe3c
 │   │   ├── 06
 │   │   │   ├── 494a0c5586948d014d2ed645aa85cd3015359c
 │   │   │   └── 6d0e60fabf55c0766877d6e94c93df14c2e011
@@ -212,7 +213,10 @@
 │   │   │   ├── 0de79fc8cd1452c63fa735c2c6c03cdcc8ba31
 │   │   │   └── 1df454d52249826b4eef68d24409304cb55f15
 │   │   ├── 1f
+│   │   │   ├── 50076bb7b844111c6f48cacf1eb101ea3b9a51
 │   │   │   └── fdfe703ed41637c1b09cbecd7d41dc898c3835
+│   │   ├── 20
+│   │   │   └── c0eaed6f7848536694aa2b77a08fe9fa25849e
 │   │   ├── 21
 │   │   │   ├── c8888b40a76ada10450158e59bc70d662d3a1d
 │   │   │   └── eb56933a649c09af4558791b6a3cebafe55c5c
@@ -238,6 +242,8 @@
 │   │   │   └── 1854c26d6be2fa1ed6fc436961fb7e2aaddcdb
 │   │   ├── 2d
 │   │   │   └── 8001a0c3e704b6e17103993c565e9a51749e5a
+│   │   ├── 2e
+│   │   │   └── 3720e6f2c53c62560099c4b378269eacfc05bd
 │   │   ├── 2f
 │   │   │   └── d184a231084d36e27ccb7fcdd9302368cabcc0
 │   │   ├── 32
@@ -248,7 +254,9 @@
 │   │   │   └── dd2d9f454d36228d10aeb6308b4b2aceac2cb9
 │   │   ├── 3c
 │   │   │   ├── 1e3c41540f063fe5c8b9d624c6bf4dc97e8b94
-│   │   │   └── 7446031de6101afbea6594500c543ee15fe468
+│   │   │   ├── 7446031de6101afbea6594500c543ee15fe468
+│   │   │   ├── 8924da62bffa38fc62ee29eb67cc810e06dc6b
+│   │   │   └── abef1e419a23255891ddd9103cfc6731416d42
 │   │   ├── 3f
 │   │   │   └── ce5d0494875cbdc400c285b282f3b7a6e1d16c
 │   │   ├── 4d
@@ -300,6 +308,10 @@
 │   │   │   └── 10686465df5beb726136621f4b5a22a190a377
 │   │   ├── 6b
 │   │   │   └── 0d148ca8e221d8e7bb8328cb1b62b823cc6ae5
+│   │   ├── 6c
+│   │   │   └── c14e4e1e2e15e3da18232b7037729d4bff88f7
+│   │   ├── 6e
+│   │   │   └── 233114c646d412a823966e67965d7503aa384f
 │   │   ├── 6f
 │   │   │   └── c928825a70d274e13da6e04cdc5d2a9e8ec0cc
 │   │   ├── 71
@@ -307,6 +319,8 @@
 │   │   ├── 73
 │   │   │   ├── 7fcab0d498236648f8fac04381f3d87b0cc622
 │   │   │   └── adbe6150265c0cf95dc62ff55028c8abcfabb2
+│   │   ├── 74
+│   │   │   └── 4ed389a7a9055e2246f63ae18bc190dd53a0c2
 │   │   ├── 75
 │   │   │   ├── 260eaad7b1b5f7745954f043207ae0421662ea
 │   │   │   └── 5288cb6003ac7a322fe4577ed98d4bbb919acf
@@ -316,6 +330,8 @@
 │   │   │   ├── 53735af580fae97fd4b55d3f5e9b6aa1dda353
 │   │   │   ├── 6ca239ef6f5533c4f7ab6374d8402c1d724533
 │   │   │   └── 75263abffa306b85b716cc267a2ecb9a969e5f
+│   │   ├── 7a
+│   │   │   └── e484f631eedf22456d32080989969731dccb78
 │   │   ├── 7c
 │   │   │   ├── 45e68487ca246057074912a0ca7888c383b6a2
 │   │   │   └── 8c2601d846048e7e4b24d20c82a43b0b292aff
@@ -362,7 +378,12 @@
 │   │   │   └── 36083a645a2e24ecc7e56b5d67673b8d79d32a
 │   │   ├── 9c
 │   │   │   └── 92f56727d1aff20d4f3bdfac97bac31da2c39e
+│   │   ├── 9d
+│   │   │   └── d13675f6aff8812814e1c3a16d4fd5c161ed83
+│   │   ├── 9e
+│   │   │   └── 3691ecebc8d031257525f1d6b5cbdeb35fea53
 │   │   ├── 9f
+│   │   │   ├── 467c605a76b47f64edebcd539ae1d57af259cf
 │   │   │   └── 5d6f0e156b18ffed851ef93dcf9c7142a4498d
 │   │   ├── a0
 │   │   │   └── 445564c88e8dbe624d9a91ab04eb32dd0eb68f
@@ -399,7 +420,8 @@
 │   │   │   └── 384377327ed9df4a5d00138e273b822bb8f32c
 │   │   ├── bb
 │   │   │   ├── 0e70231063ebedc94106a9b7d77aa3bb5af904
-│   │   │   └── 893edf573d8e586ff40d633a94e320c8f573ae
+│   │   │   ├── 893edf573d8e586ff40d633a94e320c8f573ae
+│   │   │   └── e739fba3a931e1226a604d3d928a11ba05ba59
 │   │   ├── be
 │   │   │   ├── 49498be7abea025140c4664f57ae8b50917f5b
 │   │   │   ├── 6e63a1c4618974c78368681ff2c74ab33ff284
@@ -407,6 +429,8 @@
 │   │   ├── bf
 │   │   │   ├── 381d666cfa008e851b16addbabebbaeedf0f3a
 │   │   │   └── 60e2a2b9f62d882970b359e48104802e0e4fcb
+│   │   ├── c2
+│   │   │   └── 8cee39d4ba28a9f11bf6f2fe72970519f0e9f4
 │   │   ├── c3
 │   │   │   ├── 4cc62e60a73e0363cc4fbb40e3d62d8af6d97f
 │   │   │   └── 7cdb3dfdf3edc255f237fa129e42f9eecdc885
@@ -445,6 +469,7 @@
 │   │   ├── e6
 │   │   │   └── 9de29bb2d1d6434b8b29ae775ad8c2e48c5391
 │   │   ├── e7
+│   │   │   ├── 9b71f39d2a03fca26f06f02f248bd66255ad89
 │   │   │   └── e1cfa443753b92b0e51b3be2074a03762ac742
 │   │   ├── e9
 │   │   │   ├── 4a642acbcaa6bc964a4c203dcee2e11b7f6f91
@@ -455,7 +480,8 @@
 │   │   │   └── 6408b40c3d3f5e9d199a821d4e2238a4fceadd
 │   │   ├── eb
 │   │   │   ├── 315a106ffbecf2e7e5541e750588e6d9998585
-│   │   │   └── 340870b0d4a14b2e05be7f7c42e9e8635579c7
+│   │   │   ├── 340870b0d4a14b2e05be7f7c42e9e8635579c7
+│   │   │   └── 4824d0bc525e0b016a6c3447fa4d76742eddab
 │   │   ├── ed
 │   │   │   └── bd5e8e37682722272c19a1fdaebf4d93e56d55
 │   │   ├── ee
@@ -690,7 +716,7 @@
             ├── test_flake8.py
             └── test_pep257.py
 
-258 directories, 432 files
+267 directories, 449 files
 
 ==========================================
 
@@ -770,7 +796,7 @@ from std_msgs.msg import Float32
 from geometry_msgs.msg import Twist
 
 class PID:
-    def __init__(self, Kp, Ki, Kd, limits=(-25, 25)):
+    def __init__(self, Kp, Ki, Kd, limits=(-1.0, 1.0)):
         self.Kp = Kp
         self.Ki = Ki
         self.Kd = Kd
@@ -780,8 +806,12 @@ class PID:
 
     def update(self, error):
         self.integral += error
+        # Anti-windup for integral
+        self.integral = max(-10.0, min(10.0, self.integral))
+        
         derivative = error - self.prev_error
         self.prev_error = error
+        
         output = (
             self.Kp * error +
             self.Ki * self.integral +
@@ -793,7 +823,7 @@ class ControllerNode(Node):
     def __init__(self):
         super().__init__('lane_controller')
 
-        self.declare_parameter('max_speed', 0.25)
+        self.declare_parameter('max_speed', 0.3)
         self.max_speed = self.get_parameter('max_speed').value
 
         self.offset = 0.0
@@ -804,7 +834,10 @@ class ControllerNode(Node):
         self.create_subscription(Float32, 'lane_heading', self.heading_cb, 10)
         self.pub_cmd = self.create_publisher(Twist, 'cmd_vel', 10)
 
-        self.pid = PID(Kp=7.0, Ki=0.0, Kd=0.3)
+        # UPDATED PID: Reduced gains to prevent twitching
+        # We output directly to -1.0 to 1.0 range now
+        self.pid = PID(Kp=6.0, Ki=0.0, Kd=0.1, limits=(-1.0, 1.0))
+        
         self.timer = self.create_timer(0.03, self.control_loop)
 
     def offset_cb(self, msg): self.offset = msg.data
@@ -813,30 +846,38 @@ class ControllerNode(Node):
     def control_loop(self):
         msg = Twist()
 
-        # --- T-SECTION OVERRIDE ---
-        if abs(self.heading) > 0.6:
-            steer = math.copysign(1.0, self.heading)
-            msg.linear.x = 0.15
-            msg.angular.z = steer
-            self.pub_cmd.publish(msg)
-            return
+        # --- DISABLED T-SECTION OVERRIDE ---
+        # This was causing the robot to lock up at 1.0 turn / 0.15 speed
+        # if abs(self.heading) > 0.6:
+        #     steer = math.copysign(1.0, self.heading)
+        #     msg.linear.x = 0.15
+        #     msg.angular.z = steer
+        #     self.pub_cmd.publish(msg)
+        #     return
 
         # --- NORMAL LANE FOLLOWING ---
-        error = (15 * self.offset) + (25 * self.heading)
-        steer_deg = -self.pid.update(error)
+        
+        # 1. Calculate Weighted Error
+        # Reduce these weights if the car oscillates too much
+        # Assuming offset is roughly -1.0 to 1.0 range? 
+        # If offset is pixels (e.g. 200), these weights are WAY too high.
+        combined_error = (1.0 * self.offset) + (0.5 * self.heading)
+        
+        # 2. Compute PID Output (-1.0 to 1.0)
+        # We invert the PID output because usually:
+        # Positive Error (Line is Left) -> Requires Positive Turn (Left)
+        # But previous code had -self.pid. Check this direction physically!
+        steer_cmd = -self.pid.update(combined_error)
 
-        # Scale to teleop range
-        steer_cmd = steer_deg * 0.03
-
-        # Deadband compensation
-        if abs(steer_cmd) < 0.15:
-            steer_cmd = 0.15 * math.copysign(1, steer_cmd)
-
-        # Smooth steering
-        steer_cmd = -1* 0.7 * self.prev_steer + 0.3 * steer_cmd
+        # 3. Smooth steering (Low Pass Filter)
+        # Helps prevent servo jitter
+        steer_cmd = 0.7 * self.prev_steer + 0.3 * steer_cmd
         self.prev_steer = steer_cmd
 
-        speed = self.max_speed * (1 - min(abs(steer_cmd), 1.0) * 0.3)
+        # 4. Dynamic Speed Adjustment
+        # Slow down when turning sharply
+        speed = self.max_speed * (1.0 - min(abs(steer_cmd), 0.8) * 0.5)
+        speed = max(0.05, speed) # Ensure min speed isn't 0
 
         msg.linear.x = float(speed)
         msg.angular.z = float(steer_cmd)
@@ -849,10 +890,9 @@ def main(args=None):
     try:
         rclpy.spin(node)
     finally:
-        node.pub_cmd.publish(Twist())
+        node.pub_cmd.publish(Twist()) # Stop on exit
         node.destroy_node()
         rclpy.shutdown()
-
 --- File: ./src/car_autonomy/car_autonomy/__init__.py ---
 
 --- File: ./src/car_autonomy/car_autonomy/lane_detection.py ---
@@ -959,16 +999,100 @@ class LaneDetectionNode(Node):
         return roi, mask
 
     # ======================================================
-    # Simple lane base detection
+    # Sliding Window Lane Detection (NEW ALGORITHM)
     # ======================================================
-    def find_lane_centers(self, binary):
-        histogram = np.sum(binary[binary.shape[0] // 2:], axis=0)
-        midpoint = histogram.shape[0] // 2
+    def sliding_window_lane(self, binary_warped):
+        # Create an output image to draw on and visualize the result
+        out_img = np.dstack((binary_warped, binary_warped, binary_warped)) * 255
+        
+        # Take a histogram of the bottom half of the image
+        histogram = np.sum(binary_warped[binary_warped.shape[0]//2:,:], axis=0)
+        
+        # Find the peak of the left and right halves
+        midpoint = int(histogram.shape[0]//2)
+        leftx_base = np.argmax(histogram[:midpoint])
+        rightx_base = np.argmax(histogram[midpoint:]) + midpoint
 
-        left_x = np.argmax(histogram[:midpoint])
-        right_x = np.argmax(histogram[midpoint:]) + midpoint
+        # HYPERPARAMETERS
+        nwindows = 12
+        margin = 50       # Width of the windows +/- margin
+        minpix = 50       # Minimum number of pixels found to recenter window
 
-        return left_x, right_x
+        # Set height of windows
+        window_height = int(binary_warped.shape[0]//nwindows)
+        
+        # Identify the x and y positions of all nonzero pixels in the image
+        nonzero = binary_warped.nonzero()
+        nonzeroy = np.array(nonzero[0])
+        nonzerox = np.array(nonzero[1])
+        
+        # Current positions to be updated for each window
+        leftx_current = leftx_base
+        rightx_current = rightx_base
+        
+        # Create empty lists to receive left and right lane pixel indices
+        left_lane_inds = []
+        right_lane_inds = []
+
+        # Step through the windows one by one
+        for window in range(nwindows):
+            # Identify window boundaries in x and y (and right and left)
+            win_y_low = binary_warped.shape[0] - (window+1)*window_height
+            win_y_high = binary_warped.shape[0] - window*window_height
+            
+            win_xleft_low = leftx_current - margin
+            win_xleft_high = leftx_current + margin
+            win_xright_low = rightx_current - margin
+            win_xright_high = rightx_current + margin
+            
+            # [Visual] Draw the windows on the visualization image
+            cv2.rectangle(out_img, (win_xleft_low, win_y_low), 
+                          (win_xleft_high, win_y_high), (0, 255, 0), 2) 
+            cv2.rectangle(out_img, (win_xright_low, win_y_low), 
+                          (win_xright_high, win_y_high), (0, 255, 0), 2) 
+            
+            # Identify the nonzero pixels in x and y within the window
+            good_left_inds = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) & 
+                              (nonzerox >= win_xleft_low) & (nonzerox < win_xleft_high)).nonzero()[0]
+            good_right_inds = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) & 
+                               (nonzerox >= win_xright_low) & (nonzerox < win_xright_high)).nonzero()[0]
+            
+            # Append these indices to the lists
+            left_lane_inds.append(good_left_inds)
+            right_lane_inds.append(good_right_inds)
+            
+            # If you found > minpix pixels, recenter next window on their mean position
+            if len(good_left_inds) > minpix:
+                leftx_current = int(np.mean(nonzerox[good_left_inds]))
+            if len(good_right_inds) > minpix:
+                rightx_current = int(np.mean(nonzerox[good_right_inds]))
+
+        # Concatenate the arrays of indices
+        left_lane_inds = np.concatenate(left_lane_inds)
+        right_lane_inds = np.concatenate(right_lane_inds)
+
+        # Extract line pixel positions
+        leftx = nonzerox[left_lane_inds]
+        # lefty = nonzeroy[left_lane_inds] 
+        rightx = nonzerox[right_lane_inds]
+        # righty = nonzeroy[right_lane_inds] 
+
+        # --- CALCULATE LANE CENTERS ---
+        # To match your previous logic, we need a single X value for Left and Right.
+        # We will take the average X position of all detected pixels.
+        
+        final_left_x = leftx_base # Default to histogram base if sliding window fails
+        final_right_x = rightx_base
+
+        if len(leftx) > 0:
+            final_left_x = int(np.mean(leftx))
+            out_img[nonzeroy[left_lane_inds], nonzerox[left_lane_inds]] = [255, 0, 0] # Color left red
+
+        if len(rightx) > 0:
+            final_right_x = int(np.mean(rightx))
+            out_img[nonzeroy[right_lane_inds], nonzerox[right_lane_inds]] = [0, 0, 255] # Color right blue
+
+        return final_left_x, final_right_x, out_img
 
     # ======================================================
     # Lane detection pipeline
@@ -991,21 +1115,19 @@ class LaneDetectionNode(Node):
         upper_white = np.array([180, 60, 255])
         lane_mask = cv2.inRange(hsv, lower_white, upper_white)
 
-        # --- Overlay lane mask for visualization ---
-        lane_overlay = bird.copy()
-        lane_overlay[lane_mask > 0] = (0, 255, 0)
-
-        # --- Lane center estimation ---
-        left_x, right_x = self.find_lane_centers(lane_mask)
+        # --- Sliding Window Detection (NEW) ---
+        left_x, right_x, sliding_vis = self.sliding_window_lane(lane_mask)
+        
         lane_center = (left_x + right_x) / 2.0
 
         # --- Offset ---
         pixel_offset = lane_center - (w / 2)
         offset_norm = pixel_offset / (w / 2)
 
-        # --- Heading (very rough) ---
+        # --- Heading ---
         lane_width_px = right_x - left_x
-        heading = np.arctan2((right_x - left_x), lane_width_px + 1e-6)
+        # heading = np.arctan2((right_x - left_x), lane_width_px + 1e-6)
+        heading = 0.0
 
         # --- Low-pass filter ---
         offset_norm = self.alpha * self.prev_offset + (1 - self.alpha) * offset_norm
@@ -1018,11 +1140,16 @@ class LaneDetectionNode(Node):
         cv2.line(debug, (w // 2, h), (steer_x, h - 120), (0, 0, 255), 3)
 
         # --- Compose debug view ---
-        top = np.hstack((debug, lane_overlay))
+        # Resizing sliding_vis to fit alongside debug
+        top = np.hstack((debug, sliding_vis))
+        
+        # Bottom row: ROI Mask + Raw Binary Mask (converted to color for stacking)
+        mask_vis = cv2.cvtColor(lane_mask, cv2.COLOR_GRAY2BGR)
         bottom = np.hstack((
             cv2.cvtColor(roi_mask, cv2.COLOR_GRAY2BGR),
-            cv2.cvtColor(lane_mask, cv2.COLOR_GRAY2BGR)
+            mask_vis
         ))
+        
         vis = np.vstack((top, bottom))
 
         return offset_norm, heading, vis
@@ -1070,7 +1197,6 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
-
 --- File: ./src/car_autonomy/setup.py ---
 from setuptools import setup
 import os
@@ -1472,34 +1598,31 @@ class STM32DriverNode(Node):
         angular = msg.angular.z
 
         # --- CALIBRATION VALUES ---
-        STEERING_RATIO = 2.07
-        SERVO_OFFSET   = 0
-        SERVO_MIN      = 20
-        SERVO_MAX      = 137
+        # 90 is usually center. Adjust this if your car goes straight at 95 or 85.
+        SERVO_CENTER = 90  
+        SERVO_MIN    = 20
+        SERVO_MAX    = 137
+        
+        # Max Steering Angle (in servo steps)
+        # e.g. 30 means it can go from 60 (90-30) to 120 (90+30)
+        STEERING_RANGE = 40 
         # --------------------------
 
-        # 1. Calculate Steering (Ackermann)
-        if abs(angular) > 0.001:
-            safe_linear = linear if abs(linear) > 0.01 else 0.01
-            steering_rad = math.atan((angular * self.wheel_base) / safe_linear)
-            steering_deg = math.degrees(steering_rad)
-        else:
-            steering_deg = 0.0
+        # 1. DIRECT MAPPING (Simplified)
+        # We assume angular.z is normalized roughly between -1.0 and 1.0 by the lane follower.
+        # -1.0 = Max Right, 0.0 = Straight, 1.0 = Max Left
+        
+        # Invert logic: If positive angular (Left) needs servo to go UP, use +
+        # If positive angular (Left) needs servo to go DOWN, use -
+        # Based on your previous code (90 - shift), it seems NEGATIVE is correct.
+        servo_shift = int(angular * STEERING_RANGE)
+        servo_cmd = SERVO_CENTER - servo_shift
 
-        # 2. Apply Calibration to Servo
-        # Calculate the PWM shift required
-        pwm_shift = steering_deg * STEERING_RATIO
-        
-        # Apply to Center (90 + Offset)
-        # NOTE: If Positive angular (Left) makes the servo number GO DOWN (e.g. 90 -> 50), use MINUS.
-        # If Positive angular makes servo number GO UP, change this to PLUS.
-        servo_cmd = (90 + SERVO_OFFSET) - int(pwm_shift) 
-        
-        # 3. Safety Clamp (The most important part!)
-        # This prevents the servo from buzzing/burning out
+        # 2. Safety Clamp
         servo_cmd = max(SERVO_MIN, min(SERVO_MAX, servo_cmd))
 
-        # 4. Calculate Motor Speed
+        # 3. Calculate Motor Speed
+        # Map 0.0 - 1.0 m/s to 0 - 100 PWM
         speed_cmd = int((linear / self.max_speed) * 100)
         speed_cmd = max(-100, min(100, speed_cmd))
 

@@ -101,16 +101,100 @@ class LaneDetectionNode(Node):
         return roi, mask
 
     # ======================================================
-    # Simple lane base detection
+    # Sliding Window Lane Detection (NEW ALGORITHM)
     # ======================================================
-    def find_lane_centers(self, binary):
-        histogram = np.sum(binary[binary.shape[0] // 2:], axis=0)
-        midpoint = histogram.shape[0] // 2
+    def sliding_window_lane(self, binary_warped):
+        # Create an output image to draw on and visualize the result
+        out_img = np.dstack((binary_warped, binary_warped, binary_warped)) * 255
+        
+        # Take a histogram of the bottom half of the image
+        histogram = np.sum(binary_warped[binary_warped.shape[0]//2:,:], axis=0)
+        
+        # Find the peak of the left and right halves
+        midpoint = int(histogram.shape[0]//2)
+        leftx_base = np.argmax(histogram[:midpoint])
+        rightx_base = np.argmax(histogram[midpoint:]) + midpoint
 
-        left_x = np.argmax(histogram[:midpoint])
-        right_x = np.argmax(histogram[midpoint:]) + midpoint
+        # HYPERPARAMETERS
+        nwindows = 12
+        margin = 50       # Width of the windows +/- margin
+        minpix = 50       # Minimum number of pixels found to recenter window
 
-        return left_x, right_x
+        # Set height of windows
+        window_height = int(binary_warped.shape[0]//nwindows)
+        
+        # Identify the x and y positions of all nonzero pixels in the image
+        nonzero = binary_warped.nonzero()
+        nonzeroy = np.array(nonzero[0])
+        nonzerox = np.array(nonzero[1])
+        
+        # Current positions to be updated for each window
+        leftx_current = leftx_base
+        rightx_current = rightx_base
+        
+        # Create empty lists to receive left and right lane pixel indices
+        left_lane_inds = []
+        right_lane_inds = []
+
+        # Step through the windows one by one
+        for window in range(nwindows):
+            # Identify window boundaries in x and y (and right and left)
+            win_y_low = binary_warped.shape[0] - (window+1)*window_height
+            win_y_high = binary_warped.shape[0] - window*window_height
+            
+            win_xleft_low = leftx_current - margin
+            win_xleft_high = leftx_current + margin
+            win_xright_low = rightx_current - margin
+            win_xright_high = rightx_current + margin
+            
+            # [Visual] Draw the windows on the visualization image
+            cv2.rectangle(out_img, (win_xleft_low, win_y_low), 
+                          (win_xleft_high, win_y_high), (0, 255, 0), 2) 
+            cv2.rectangle(out_img, (win_xright_low, win_y_low), 
+                          (win_xright_high, win_y_high), (0, 255, 0), 2) 
+            
+            # Identify the nonzero pixels in x and y within the window
+            good_left_inds = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) & 
+                              (nonzerox >= win_xleft_low) & (nonzerox < win_xleft_high)).nonzero()[0]
+            good_right_inds = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) & 
+                               (nonzerox >= win_xright_low) & (nonzerox < win_xright_high)).nonzero()[0]
+            
+            # Append these indices to the lists
+            left_lane_inds.append(good_left_inds)
+            right_lane_inds.append(good_right_inds)
+            
+            # If you found > minpix pixels, recenter next window on their mean position
+            if len(good_left_inds) > minpix:
+                leftx_current = int(np.mean(nonzerox[good_left_inds]))
+            if len(good_right_inds) > minpix:
+                rightx_current = int(np.mean(nonzerox[good_right_inds]))
+
+        # Concatenate the arrays of indices
+        left_lane_inds = np.concatenate(left_lane_inds)
+        right_lane_inds = np.concatenate(right_lane_inds)
+
+        # Extract line pixel positions
+        leftx = nonzerox[left_lane_inds]
+        # lefty = nonzeroy[left_lane_inds] 
+        rightx = nonzerox[right_lane_inds]
+        # righty = nonzeroy[right_lane_inds] 
+
+        # --- CALCULATE LANE CENTERS ---
+        # To match your previous logic, we need a single X value for Left and Right.
+        # We will take the average X position of all detected pixels.
+        
+        final_left_x = leftx_base # Default to histogram base if sliding window fails
+        final_right_x = rightx_base
+
+        if len(leftx) > 0:
+            final_left_x = int(np.mean(leftx))
+            out_img[nonzeroy[left_lane_inds], nonzerox[left_lane_inds]] = [255, 0, 0] # Color left red
+
+        if len(rightx) > 0:
+            final_right_x = int(np.mean(rightx))
+            out_img[nonzeroy[right_lane_inds], nonzerox[right_lane_inds]] = [0, 0, 255] # Color right blue
+
+        return final_left_x, final_right_x, out_img
 
     # ======================================================
     # Lane detection pipeline
@@ -133,21 +217,19 @@ class LaneDetectionNode(Node):
         upper_white = np.array([180, 60, 255])
         lane_mask = cv2.inRange(hsv, lower_white, upper_white)
 
-        # --- Overlay lane mask for visualization ---
-        lane_overlay = bird.copy()
-        lane_overlay[lane_mask > 0] = (0, 255, 0)
-
-        # --- Lane center estimation ---
-        left_x, right_x = self.find_lane_centers(lane_mask)
+        # --- Sliding Window Detection (NEW) ---
+        left_x, right_x, sliding_vis = self.sliding_window_lane(lane_mask)
+        
         lane_center = (left_x + right_x) / 2.0
 
         # --- Offset ---
         pixel_offset = lane_center - (w / 2)
         offset_norm = pixel_offset / (w / 2)
 
-        # --- Heading (very rough) ---
+        # --- Heading ---
         lane_width_px = right_x - left_x
-        heading = np.arctan2((right_x - left_x), lane_width_px + 1e-6)
+        # heading = np.arctan2((right_x - left_x), lane_width_px + 1e-6)
+        heading = 0.0
 
         # --- Low-pass filter ---
         offset_norm = self.alpha * self.prev_offset + (1 - self.alpha) * offset_norm
@@ -160,11 +242,16 @@ class LaneDetectionNode(Node):
         cv2.line(debug, (w // 2, h), (steer_x, h - 120), (0, 0, 255), 3)
 
         # --- Compose debug view ---
-        top = np.hstack((debug, lane_overlay))
+        # Resizing sliding_vis to fit alongside debug
+        top = np.hstack((debug, sliding_vis))
+        
+        # Bottom row: ROI Mask + Raw Binary Mask (converted to color for stacking)
+        mask_vis = cv2.cvtColor(lane_mask, cv2.COLOR_GRAY2BGR)
         bottom = np.hstack((
             cv2.cvtColor(roi_mask, cv2.COLOR_GRAY2BGR),
-            cv2.cvtColor(lane_mask, cv2.COLOR_GRAY2BGR)
+            mask_vis
         ))
+        
         vis = np.vstack((top, bottom))
 
         return offset_norm, heading, vis

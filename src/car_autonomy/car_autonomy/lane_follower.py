@@ -68,7 +68,7 @@ class ControllerNode(Node):
             steer_cmd = 0.15 * math.copysign(1, steer_cmd)
 
         # Smooth steering
-        steer_cmd = -1* 0.7 * self.prev_steer + 0.3 * steer_cmd
+        steer_cmd = 0.7 * self.prev_steer + 0.3 * steer_cmd
         self.prev_steer = steer_cmd
 
         speed = self.max_speed * (1 - min(abs(steer_cmd), 1.0) * 0.3)

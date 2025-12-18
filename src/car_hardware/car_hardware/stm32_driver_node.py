@@ -77,34 +77,31 @@ class STM32DriverNode(Node):
         angular = msg.angular.z
 
         # --- CALIBRATION VALUES ---
-        STEERING_RATIO = 2.07
-        SERVO_OFFSET   = 0
-        SERVO_MIN      = 20
-        SERVO_MAX      = 137
+        # 90 is usually center. Adjust this if your car goes straight at 95 or 85.
+        SERVO_CENTER = 90  
+        SERVO_MIN    = 20
+        SERVO_MAX    = 137
+        
+        # Max Steering Angle (in servo steps)
+        # e.g. 30 means it can go from 60 (90-30) to 120 (90+30)
+        STEERING_RANGE = 40 
         # --------------------------
 
-        # 1. Calculate Steering (Ackermann)
-        if abs(angular) > 0.001:
-            safe_linear = linear if abs(linear) > 0.01 else 0.01
-            steering_rad = math.atan((angular * self.wheel_base) / safe_linear)
-            steering_deg = math.degrees(steering_rad)
-        else:
-            steering_deg = 0.0
+        # 1. DIRECT MAPPING (Simplified)
+        # We assume angular.z is normalized roughly between -1.0 and 1.0 by the lane follower.
+        # -1.0 = Max Right, 0.0 = Straight, 1.0 = Max Left
+        
+        # Invert logic: If positive angular (Left) needs servo to go UP, use +
+        # If positive angular (Left) needs servo to go DOWN, use -
+        # Based on your previous code (90 - shift), it seems NEGATIVE is correct.
+        servo_shift = int(angular * STEERING_RANGE)
+        servo_cmd = SERVO_CENTER - servo_shift
 
-        # 2. Apply Calibration to Servo
-        # Calculate the PWM shift required
-        pwm_shift = steering_deg * STEERING_RATIO
-        
-        # Apply to Center (90 + Offset)
-        # NOTE: If Positive angular (Left) makes the servo number GO DOWN (e.g. 90 -> 50), use MINUS.
-        # If Positive angular makes servo number GO UP, change this to PLUS.
-        servo_cmd = (90 + SERVO_OFFSET) - int(pwm_shift) 
-        
-        # 3. Safety Clamp (The most important part!)
-        # This prevents the servo from buzzing/burning out
+        # 2. Safety Clamp
         servo_cmd = max(SERVO_MIN, min(SERVO_MAX, servo_cmd))
 
-        # 4. Calculate Motor Speed
+        # 3. Calculate Motor Speed
+        # Map 0.0 - 1.0 m/s to 0 - 100 PWM
         speed_cmd = int((linear / self.max_speed) * 100)
         speed_cmd = max(-100, min(100, speed_cmd))
 

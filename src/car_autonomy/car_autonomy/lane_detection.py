@@ -1,31 +1,26 @@
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Float32
-
 import cv2
 import numpy as np
+from std_msgs.msg import Float32
 import threading
 
 class LaneDetectionNode(Node):
-    """
-    Script 2 (Minimal):
-    - Classical CV lane detection
-    - Sliding window + polynomial curvature
-    - Publishes lane offset and heading
-    - NO FSM, NO cv_bridge, NO ROS image topics
-    """
-
     def __init__(self):
         super().__init__('lane_detection_node')
 
-        # Publishers (unchanged interface)
+        # Publishers
         self.pub_offset = self.create_publisher(Float32, 'lane_offset', 10)
         self.pub_heading = self.create_publisher(Float32, 'lane_heading', 10)
 
-        # Camera
+        # Subscriber: To see what the follower is actually doing
+        self.steer_sub = self.create_subscription(Float32, 'control/steer_cmd', self.steer_cb, 10)
+        self.current_steer = 0.0
+
+        # Video Setup
         self.cap = cv2.VideoCapture(0)
-        if not self.cap.isOpened():
-            self.get_logger().error('Camera not opened')
+        fourcc = cv2.VideoWriter_fourcc(*'XVID')
+        self.out = cv2.VideoWriter('lane_debug.avi', fourcc, 20.0, (640, 480))
 
         self.latest_frame = None
         self.lock = threading.Lock()
@@ -36,189 +31,109 @@ class LaneDetectionNode(Node):
         # Timer (20 Hz)
         self.timer = self.create_timer(0.05, self.timer_callback)
 
-    # --------------------------------------------------
+    def steer_cb(self, msg):
+        self.current_steer = msg.data
+
     def _capture_frames(self):
         while True:
-            if not self.cap.isOpened():
-                continue
-
+            if not self.cap.isOpened(): continue
             ret, frame = self.cap.read()
-            if not ret:
-                continue  # <-- VERY IMPORTANT on Jetson
-
+            if not ret: continue
             frame = cv2.resize(frame, (640, 480))
             with self.lock:
                 self.latest_frame = frame
 
-
-    # --------------------------------------------------
     def detect_lane(self, frame):
         height, width = frame.shape[:2]
 
-        # --- ROI ---
-        roi = frame[int(height * 0.6):height, :]
+        # 1. Visualize ROI (Yellow Rectangle) - tackling the curve limit by raising to 0.5
+        roi_top = int(height * 0.5) 
+        cv2.rectangle(frame, (0, roi_top), (width, height), (0, 255, 255), 2)
+        roi = frame[roi_top:height, :]
 
-        # --- Perspective transform ---
-        pts1 = np.float32([
-            [0, roi.shape[0]],
-            [width, roi.shape[0]],
-            [width, 0],
-            [0, 0]
-        ])
-        pts2 = np.float32([
-            [0, height],
-            [width, height],
-            [width, 0],
-            [0, 0]
-        ])
+        # 2. Perspective Transform (Bird's Eye)
+        pts1 = np.float32([[0, roi.shape[0]], [width, roi.shape[0]], [width, 0], [0, 0]])
+        pts2 = np.float32([[0, height], [width, height], [width, 0], [0, 0]])
         M = cv2.getPerspectiveTransform(pts1, pts2)
-        Minv = cv2.getPerspectiveTransform(pts2, pts1)
         warped = cv2.warpPerspective(roi, M, (width, height))
 
-        # --- Color mask (white + yellow) ---
+        # 3. Color Masking (Yellow/White)
         hsv = cv2.cvtColor(warped, cv2.COLOR_BGR2HSV)
         white_mask = cv2.inRange(hsv, (106, 0, 219), (144, 255, 255))
         yellow_mask = cv2.inRange(hsv, (79, 43, 207), (72, 155, 233))
         mask = cv2.bitwise_or(white_mask, yellow_mask)
 
-        # --- Sliding window ---
-        lx, rx = self.sliding_window(mask)
+        # 4. Sliding Window (Increased margin=80, Lowered minpix=30 for curves)
+        lx, rx, debug_view = self.sliding_window(mask)
 
         if len(lx) < 10 or len(rx) < 10:
             return 0.0, 0.0, frame
 
-        # --- Polynomial fit (curvature) ---
-        # Get y coordinates from mask
-        nonzero = mask.nonzero()
-        nonzeroy = np.array(nonzero[0])
-        nonzerox = np.array(nonzero[1])
+        # 5. Lane Fitting and Curvature
+        left_fit = np.polyfit(np.arange(len(lx)), lx, 1) # Simple linear fit for heading
+        right_fit = np.polyfit(np.arange(len(rx)), rx, 1)
+        lane_center = (lx[-1] + rx[-1]) / 2
+        
+        offset = (lane_center - (width / 2)) / (width / 2) # Normalized
+        heading = (left_fit[0] + right_fit[0]) / 2
 
-        left_inds  = np.isin(nonzerox, lx)
-        right_inds = np.isin(nonzerox, rx)
+        # 6. Overlays
+        cv2.putText(frame, f'Offset: {offset:.2f}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+        cv2.putText(frame, f'Servo Cmd: {self.current_steer:.2f}', (10, 65), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
 
-        leftx  = nonzerox[left_inds]
-        lefty  = nonzeroy[left_inds]
-        rightx = nonzerox[right_inds]
-        righty = nonzeroy[right_inds]
-
-        if len(leftx) < 50 or len(rightx) < 50:
-            return 0.0, 0.0, frame
-
-        left_fit  = np.polyfit(lefty, leftx, 2)
-        right_fit = np.polyfit(righty, rightx, 2)
-
-
-        center_fit = (left_fit + right_fit) / 2.0
-
-        # Heading from curvature derivative
-        y_eval = height * 0.9
-        dx_dy = 2 * center_fit[0] * y_eval + center_fit[1]
-        heading = float(np.arctan(dx_dy))
-
-        # Offset
-        lane_center = (np.mean(lx) + np.mean(rx)) / 2
-        offset = (lane_center - width / 2) / (width / 2)
-
-        # --- Visualization ---
-        plot_y = np.linspace(0, height - 1, height)
-        left_x = left_fit[0] * plot_y**2 + left_fit[1] * plot_y + left_fit[2]
-        right_x = right_fit[0] * plot_y**2 + right_fit[1] * plot_y + right_fit[2]
-
-        lane_vis = warped.copy()
-        for y, lx_p, rx_p in zip(plot_y.astype(int), left_x.astype(int), right_x.astype(int)):
-            if 0 <= lx_p < width and 0 <= rx_p < width:
-                cv2.circle(lane_vis, (lx_p, y), 1, (255, 0, 0), -1)
-                cv2.circle(lane_vis, (rx_p, y), 1, (0, 0, 255), -1)
-
-        lane_area = np.zeros_like(lane_vis)
-        pts = np.vstack((np.transpose(np.vstack([left_x, plot_y])),
-                          np.flipud(np.transpose(np.vstack([right_x, plot_y])))))
-        cv2.fillPoly(lane_area, [pts.astype(np.int32)], (0, 255, 0))
-
-        unwarped_lane = cv2.warpPerspective(lane_area, Minv, (width, roi.shape[0]))
-        frame[int(height * 0.6):height, :] = cv2.addWeighted(
-            frame[int(height * 0.6):height, :], 1.0, unwarped_lane, 0.3, 0)
-
-        cv2.putText(frame, f'Offset: {offset:.2f}', (10, 30),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-        cv2.putText(frame, f'Heading: {heading:.2f} rad', (10, 60),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+        # Picture-in-Picture: Show the warped sliding windows in the corner
+        small_debug = cv2.resize(debug_view, (160, 120))
+        frame[0:120, width-160:width] = small_debug
 
         return float(offset), float(heading), frame
 
-    # --------------------------------------------------
     def sliding_window(self, mask):
-        histogram = np.sum(mask[mask.shape[0] // 2:, :], axis=0)
+        out_img = np.dstack((mask, mask, mask)) * 255
+        histogram = np.sum(mask[mask.shape[0]//2:,:], axis=0)
         midpoint = histogram.shape[0] // 2
-        left_base = np.argmax(histogram[:midpoint])
-        right_base = np.argmax(histogram[midpoint:]) + midpoint
-
-        n_windows = 12
+        left_c = np.argmax(histogram[:midpoint])
+        right_c = np.argmax(histogram[midpoint:]) + midpoint
+        
+        n_windows, margin, minpix = 10, 80, 30
         window_height = mask.shape[0] // n_windows
         nonzero = mask.nonzero()
-        nonzeroy = np.array(nonzero[0])
-        nonzerox = np.array(nonzero[1])
-
-        margin = 50
-        minpix = 50
+        nzy, nzx = np.array(nonzero[0]), np.array(nonzero[1])
         lx, rx = [], []
-        left_current, right_current = left_base, right_base
 
-        for window in range(n_windows):
-            win_y_low = mask.shape[0] - (window + 1) * window_height
-            win_y_high = mask.shape[0] - window * window_height
+        for w in range(n_windows):
+            y_low, y_high = mask.shape[0]-(w+1)*window_height, mask.shape[0]-w*window_height
+            # Define window boundaries
+            win_l_l, win_l_h = left_c-margin, left_c+margin
+            win_r_l, win_r_h = right_c-margin, right_c+margin
+            # Draw for video
+            cv2.rectangle(out_img,(win_l_l,y_low),(win_l_h,y_high),(0,255,0), 2)
+            cv2.rectangle(out_img,(win_r_l,y_low),(win_r_h,y_high),(0,0,255), 2)
+            # Find pixels
+            good_l = ((nzy >= y_low) & (nzy < y_high) & (nzx >= win_l_l) & (nzx < win_l_h)).nonzero()[0]
+            good_r = ((nzy >= y_low) & (nzy < y_high) & (nzx >= win_r_l) & (nzx < win_r_h)).nonzero()[0]
+            if len(good_l) > minpix: left_c = int(np.mean(nzx[good_l]))
+            if len(good_r) > minpix: right_c = int(np.mean(nzx[good_r]))
+            lx.append(left_c); rx.append(right_c)
 
-            good_left = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) &
-                         (nonzerox >= left_current - margin) & (nonzerox < left_current + margin))
-            good_right = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) &
-                          (nonzerox >= right_current - margin) & (nonzerox < right_current + margin))
+        return lx, rx, out_img
 
-            if np.sum(good_left) > minpix:
-                left_current = int(np.mean(nonzerox[good_left]))
-            if np.sum(good_right) > minpix:
-                right_current = int(np.mean(nonzerox[good_right]))
-
-            lx.extend(nonzerox[good_left])
-            rx.extend(nonzerox[good_right])
-
-        return np.array(lx), np.array(rx)
-
-    # --------------------------------------------------
     def timer_callback(self):
         with self.lock:
-            frame = self.latest_frame
-
-        if frame is None:
-            return
+            if self.latest_frame is None: return
+            frame = self.latest_frame.copy()
 
         offset, heading, visual = self.detect_lane(frame)
+        self.pub_offset.publish(Float32(data=offset))
+        self.pub_heading.publish(Float32(data=heading))
+        self.out.write(visual)
 
-        msg_o = Float32()
-        msg_o.data = offset
-        self.pub_offset.publish(msg_o)
-
-        msg_h = Float32()
-        msg_h.data = heading
-        self.pub_heading.publish(msg_h)
-
-    # --------------------------------------------------
     def destroy_node(self):
-        if self.cap.isOpened():
-            self.cap.release()
+        self.out.release()
+        self.cap.release()
         super().destroy_node()
-
 
 def main(args=None):
     rclpy.init(args=args)
     node = LaneDetectionNode()
-    try:
-        rclpy.spin(node)
-    except KeyboardInterrupt:
-        pass
-    finally:
-        node.destroy_node()
-        rclpy.shutdown()
-
-
-if __name__ == '__main__':
-    main()
+    try: rclpy.spin(node)
+    finally: node.destroy_node(); rclpy.shutdown()
